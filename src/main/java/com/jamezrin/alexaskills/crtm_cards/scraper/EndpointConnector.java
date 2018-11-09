@@ -1,7 +1,6 @@
 package com.jamezrin.alexaskills.crtm_cards.scraper;
 
 import com.jamezrin.alexaskills.crtm_cards.AppConsts;
-import org.apache.commons.codec.binary.Base64;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -15,7 +14,9 @@ import org.apache.http.message.BasicNameValuePair;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,7 +34,7 @@ public class EndpointConnector {
     }
 
     public InputStream connect() throws Exception {
-        // TODO Construct and encode our own viewstate (recommended)
+        // TODO Construct and encode our own viewstate (probably a good idea, though seems difficult)
         // TODO Or alternatively, cache this viewstate every second for requests that are done at the same time
 
 

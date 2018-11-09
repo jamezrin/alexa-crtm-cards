@@ -1,5 +1,8 @@
 package com.jamezrin.alexaskills.crtm_cards.scraper;
 
+import com.jamezrin.alexaskills.crtm_cards.scraper.exceptions.InactiveCardNumberException;
+import com.jamezrin.alexaskills.crtm_cards.scraper.exceptions.InvalidCardNumberException;
+import com.jamezrin.alexaskills.crtm_cards.scraper.exceptions.NotExistentCardNumberException;
 import com.jamezrin.alexaskills.crtm_cards.scraper.exceptions.ScraperException;
 import com.jamezrin.alexaskills.crtm_cards.scraper.types.Card;
 import com.jamezrin.alexaskills.crtm_cards.scraper.types.CardRenewal;
@@ -11,7 +14,6 @@ import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.EnumMap;
@@ -24,6 +26,7 @@ import static com.jamezrin.alexaskills.crtm_cards.AppConsts.CRTM_BASE_URI;
 
 public class ResponseParser {
     private final InputStream inputStream;
+    private Document document;
 
     public ResponseParser(InputStream inputStream) {
         this.inputStream = inputStream;
@@ -31,24 +34,65 @@ public class ResponseParser {
 
     public Card parse() throws ScraperException {
         try {
-            Document document = Jsoup.parse(inputStream, "UTF-8", CRTM_BASE_URI);
-
-            // TODO Check for errors before processing
-            //System.out.println(document.html());
-
-            return processCard(document);
+            document = Jsoup.parse(inputStream, "UTF-8", CRTM_BASE_URI);
         } catch (IOException e) {
             throw new ScraperException("Could not parse the data returned by the endpoint", e);
         }
+
+        checkForErrors(document);
+
+        return processCard(document);
     }
 
     public InputStream getInputStream() {
         return inputStream;
     }
 
+    public Document getDocument() {
+        return document;
+    }
+
     public static final DateTimeFormatter CRTM_DATE_FORMAT = DateTimeFormatter.ofPattern("dd-MM-yyyy").withLocale(Locale.getDefault());
     public static final Pattern RENEWAL_DATE_PATTERN = Pattern.compile("^(?<type>[\\s\\S]+): (?<date>[0-9]{2}-[0-9]{2}-[0-9]{4})$");
     public static final Pattern PROFILE_DATE_PATTERN = Pattern.compile("^Perfil (?<type>[\\s\\S]+) caduca: (?<date>[0-9]{2}-[0-9]{2}-[0-9]{4})$");
+    public static final Pattern PROFILE_SPLIT_PATTERN = Pattern.compile("<br>(\\s+)?");
+    public static final Pattern FORMAT_ERROR_PATTERN = Pattern.compile("^javascript:alert\\(\'(?<alertmsg>[\\s\\S]+)\'\\);$");
+
+    public static void checkForErrors(Document document) throws ScraperException {
+        checkForErrorMsg(document.getElementById("ctl00_cntPh_lblError"));
+        checkForErrorScript(document.getElementsByTag("script"));
+    }
+
+    private static void checkForErrorMsg(Element element) throws ScraperException {
+        if (element != null) {
+            String content = element.text();
+            if (!content.isEmpty()) {
+                switch (content) {
+                    case "POR FAVOR, INTRODUZCA DE NUEVO SU TARJETA": // get these strings in the exceptions
+                        throw new NotExistentCardNumberException(content);
+                    case "TARJETA NO ACTIVA":
+                        throw new InactiveCardNumberException(content);
+                    default:
+                        throw new ScraperException(content);
+                }
+            }
+        }
+    }
+
+    private static void checkForErrorScript(Elements elements) throws ScraperException {
+        if (elements != null) {
+            for (Element element : elements) {
+                Matcher matcher = FORMAT_ERROR_PATTERN.matcher(element.html());
+
+                if (!matcher.find()) {
+                    continue;
+                }
+
+                String content = matcher.group("alertmsg");
+                throw new InvalidCardNumberException(content);
+            }
+        }
+    }
 
     public static Card processCard(Document document) {
         // Full card number
@@ -68,43 +112,55 @@ public class ResponseParser {
         return new Card(
                 fullNumEl.text(),
                 results.get(0).text(),
-                processCardType(results.get(1).text()),
+                CardType.fromId(results.get(1).text()),
 
-                new CardRenewal[] {
+                new CardRenewal[]{
                         extractRenewal(results.subList(2, 6)),
                         extractRenewal(results.subList(6, 10))
                 },
 
-                extractDate(expirationEl.text()),
-                extractProfiles(profilesEl)
+                extractSimpleDate(expirationEl.text()),
+                extractProfiles(profilesEl.html())
         );
     }
 
-    public static EnumMap<CardType, LocalDate> extractProfiles(Element string) {
-        System.out.println(string);
-        return null;
-    }
+    public static EnumMap<CardType, LocalDate> extractProfiles(String string) {
+        EnumMap<CardType, LocalDate> map = new EnumMap<>(CardType.class);
+        String[] parts = PROFILE_SPLIT_PATTERN.split(string);
 
-    public static CardType processCardType(String string) {
-        for (CardType type : CardType.values()) {
-            if (type.getId().equals(string)) {
-                return type;
+        for (String part : parts) {
+            Matcher matcher = PROFILE_DATE_PATTERN.matcher(part);
+
+            if (!matcher.find()) {
+                continue;
             }
+
+            String typeString = matcher.group("type");
+            String dateString = matcher.group("date");
+
+            CardType type = CardType.fromId(typeString);
+            LocalDate date = LocalDate.parse(dateString, CRTM_DATE_FORMAT);
+
+            if (type == null) {
+                continue;
+            }
+
+            map.put(type, date);
         }
 
-        return null;
+        return map;
     }
 
     public static CardRenewal extractRenewal(List<Element> list) {
         return new CardRenewal(
-                extractDate(list.get(0).text()),
-                extractDate(list.get(1).text()),
-                extractDate(list.get(2).text()),
-                extractDate(list.get(3).text())
+                extractSimpleDate(list.get(0).text()),
+                extractSimpleDate(list.get(1).text()),
+                extractSimpleDate(list.get(2).text()),
+                extractSimpleDate(list.get(3).text())
         );
     }
 
-    public static LocalDate extractDate(String string) {
+    public static LocalDate extractSimpleDate(String string) {
         if (string == null) {
             return null;
         }

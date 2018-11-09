@@ -1,7 +1,8 @@
 package com.jamezrin.alexaskills.crtm_cards.scraper.exceptions;
 
 public class ScraperException extends Exception {
-    public ScraperException() { }
+    public ScraperException() {
+    }
 
     public ScraperException(String message) {
         super(message);

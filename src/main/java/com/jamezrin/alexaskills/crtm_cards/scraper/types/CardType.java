@@ -23,4 +23,14 @@ public enum CardType {
                 "id='" + id + '\'' +
                 '}';
     }
+
+    public static CardType fromId(String type) {
+        for (CardType card : CardType.values()) {
+            if (card.getId().equals(type)) {
+                return card;
+            }
+        }
+
+        return null;
+    }
 }

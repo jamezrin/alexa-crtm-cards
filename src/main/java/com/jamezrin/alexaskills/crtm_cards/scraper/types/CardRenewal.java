@@ -1,7 +1,6 @@
 package com.jamezrin.alexaskills.crtm_cards.scraper.types;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 public class CardRenewal {
     private final LocalDate rechargeDate;
