@@ -1,9 +1,9 @@
-package com.jamezrin.alexaskills.crtm_cards;
+package com.jamezrin.alexaskills.crtm_cards.skill;
 
 import com.amazon.ask.Skill;
 import com.amazon.ask.SkillStreamHandler;
 import com.amazon.ask.Skills;
-import com.jamezrin.alexaskills.crtm_cards.handlers.*;
+import com.jamezrin.alexaskills.crtm_cards.skill.handlers.*;
 
 public class MainSkillStreamHandler extends SkillStreamHandler {
     private static Skill getSkill() {

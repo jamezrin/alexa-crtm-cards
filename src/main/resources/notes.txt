@@ -1,0 +1,3 @@
+https://www.baeldung.com/httpclient-post-http-request
+
+http://viewstatedecoder.azurewebsites.net/
