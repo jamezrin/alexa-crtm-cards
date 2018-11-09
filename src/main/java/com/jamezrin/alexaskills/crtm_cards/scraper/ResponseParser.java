@@ -38,19 +38,21 @@ public class ResponseParser {
     private Card processCard(Document document) {
         Element fullNumEl = document.getElementById("ctl00_cntPh_lblNumeroTarjeta");
 
-        Elements resultsEls = document.select("#ctl00_cntPh_tableResultados td:nth-child(1) span");
+        Element resultsTableEl = document.getElementById("ctl00_cntPh_tableResultados");
+        Element resultRowEl = resultsTableEl.getElementsByTag("td").get(1);
+        Elements results = resultRowEl.getElementsByTag("span");
 
         Element expirationEl = document.getElementById("ctl00_cntPh_lblFechaCaducidadTarjeta");
         Element profilesEl = document.getElementById("ctl00_cntPh_lblInfoDatosDeLaTarjeta");
 
         return new Card(
                 fullNumEl.text(),
-                resultsEls.get(0).text(),
-                processCardType(resultsEls.get(1)),
+                results.get(0).text(),
+                processCardType(results.get(1)),
 
                 new CardRenewal[] {
-                        processRenewals(resultsEls.subList(2, 5)),
-                        processRenewals(resultsEls.subList(6, 9))
+                        processRenewals(results.subList(2, 5)),
+                        processRenewals(results.subList(6, 9))
                 },
 
                 null, // from the extra info (diff id)
