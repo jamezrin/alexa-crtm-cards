@@ -35,19 +35,10 @@ public class EndpointConnector {
     public InputStream connect() throws Exception {
         // TODO Construct and encode our own viewstate (recommended)
         // TODO Or alternatively, cache this viewstate every second for requests that are done at the same time
-        /*
-        HttpGet viewRequest = new HttpGet(AppConsts.CRTM_QUERY_URI);
-        HttpResponse viewResponse = httpclient.execute(viewRequest);
-        HttpEntity viewResponseEntity = viewResponse.getEntity();
 
-        Document viewStateDocument = Jsoup.parse(viewResponseEntity.getContent(), "UTF-8", CRTM_BASE_URI);
-        String viewState = viewStateDocument.getElementById("__VIEWSTATE").attr("value");
-        */
 
         // TODO Maybe it will work with a fixed viewState
         String viewState = "/wEPDwUJNzkyNzg1MDMyD2QWAmYPZBYCAgMPZBYEAgMPDxYCHgRUZXh0BSBWaWVybmVzLCAwOSBkZSBub3ZpZW1icmUgZGUgMjAxOGRkAgUPZBYGAgEPDxYCHwAFCjA5LzExLzIwMThkZAIDDw8WAh8ABQUwMToyOGRkAgUPZBYCAgMPZBYCZg9kFgICAQ8QZA8WBmYCAQICAgMCBAIFFgYQBQMtLS0FAy0tLWcQBQMwMDEFAzAwMWcQBQMwMDIFAzAwMmcQBQMwMDMFAzAwM2cQBQMxNzUFAzE3NWcQBQMyNTEFAzI1MWdkZGToxCNvBRzJegbOeKpmT39Wqme8cu0qpIFR9XJrvmmEcw==";
-
-        System.out.println("viewState: " + viewState);
 
         HttpPost queryRequest = buildQueryRequest(viewState, cardPrefix, cardNumber);
         HttpResponse queryResponse = httpclient.execute(queryRequest);
@@ -81,5 +72,15 @@ public class EndpointConnector {
         httpPost.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
 
         return httpPost;
+    }
+
+    public static String fetchViewState() throws IOException {
+        HttpGet viewRequest = new HttpGet(AppConsts.CRTM_QUERY_URI);
+        HttpResponse viewResponse = httpclient.execute(viewRequest);
+        HttpEntity viewResponseEntity = viewResponse.getEntity();
+
+        Document viewStateDocument = Jsoup.parse(viewResponseEntity.getContent(), "UTF-8", CRTM_BASE_URI);
+        System.out.println(viewStateDocument.html());
+        return viewStateDocument.getElementById("__VIEWSTATE").attr("value");
     }
 }

@@ -16,4 +16,11 @@ public enum CardType {
     public String getId() {
         return id;
     }
+
+    @Override
+    public String toString() {
+        return "CardType{" +
+                "id='" + id + '\'' +
+                '}';
+    }
 }
