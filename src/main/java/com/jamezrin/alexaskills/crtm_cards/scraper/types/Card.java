@@ -5,7 +5,6 @@ import java.util.EnumMap;
 
 public class Card {
     private final String fullNum;
-
     private final String title;
     private final CardType type;
 
