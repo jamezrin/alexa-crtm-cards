@@ -4,35 +4,23 @@ import java.util.Date;
 import java.util.EnumMap;
 
 public class Card {
-    private final String ttpCode;
-    private final String ttpNum;
     private final String fullNum;
 
     private final String title;
-    private final Profile type;
+    private final CardType type;
 
-    private final Recharge[] recharges;
+    private final CardRenewal[] renewals;
 
     private final Date expiration;
-    private final EnumMap<Profile, Date> profiles;
+    private final EnumMap<CardType, Date> profiles;
 
-    public Card(String ttpCode, String ttpNum, String fullNum, String title, Profile type, Recharge[] recharges, Date expiration, EnumMap<Profile, Date> profiles) {
-        this.ttpCode = ttpCode;
-        this.ttpNum = ttpNum;
+    public Card(String fullNum, String title, CardType type, CardRenewal[] renewals, Date expiration, EnumMap<CardType, Date> profiles) {
         this.fullNum = fullNum;
         this.title = title;
         this.type = type;
-        this.recharges = recharges;
+        this.renewals = renewals;
         this.expiration = expiration;
         this.profiles = profiles;
-    }
-
-    public String getTtpCode() {
-        return ttpCode;
-    }
-
-    public String getTtpNum() {
-        return ttpNum;
     }
 
     public String getFullNum() {
@@ -43,19 +31,19 @@ public class Card {
         return title;
     }
 
-    public Profile getType() {
+    public CardType getType() {
         return type;
     }
 
-    public Recharge[] getRecharges() {
-        return recharges;
+    public CardRenewal[] getRenewals() {
+        return renewals;
     }
 
     public Date getExpiration() {
         return expiration;
     }
 
-    public EnumMap<Profile, Date> getProfiles() {
+    public EnumMap<CardType, Date> getProfiles() {
         return profiles;
     }
 }

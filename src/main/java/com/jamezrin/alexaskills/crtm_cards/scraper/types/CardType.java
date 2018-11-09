@@ -1,6 +1,6 @@
 package com.jamezrin.alexaskills.crtm_cards.scraper.types;
 
-public enum Profile {
+public enum CardType {
     NORMAL("Normal"),
     YOUTH("Joven"),
     BLUE("Tarjeta Azul"),
@@ -9,7 +9,7 @@ public enum Profile {
 
     private final String id;
 
-    Profile(String id) {
+    CardType(String id) {
         this.id = id;
     }
 
