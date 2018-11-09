@@ -5,7 +5,6 @@ import com.jamezrin.alexaskills.crtm_cards.scraper.exceptions.InvalidCardNumberE
 import com.jamezrin.alexaskills.crtm_cards.scraper.types.Card;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.io.InputStream;
@@ -14,9 +13,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class TestScrapCrtm {
     @Test
-    @DisplayName("Card Holder: Jaime")
     public void testOkCard1() throws Exception {
-        EndpointConnector connector = new EndpointConnector("001", "0040440120");
+        EndpointConnector connector = new EndpointConnector("001", "0040440120"); // Jaime
         InputStream is = connector.connect();
         ResponseParser parser = new ResponseParser(is);
         Card card = parser.parse();
@@ -24,9 +22,8 @@ public class TestScrapCrtm {
     }
 
     @Test
-    @DisplayName("Card Holder: Ana")
     public void testOkCard2() throws Exception {
-        EndpointConnector connector = new EndpointConnector("001", "0000884263");
+        EndpointConnector connector = new EndpointConnector("001", "0000884263"); // Ana
         InputStream is = connector.connect();
         ResponseParser parser = new ResponseParser(is);
         Card card = parser.parse();
@@ -35,7 +32,7 @@ public class TestScrapCrtm {
 
     @Test
     public void testInactiveCard() throws Exception {
-        EndpointConnector connector = new EndpointConnector("251", "0011652831");
+        EndpointConnector connector = new EndpointConnector("001", "0000023768");
         InputStream is = connector.connect();
         assertThrows(InactiveCardNumberException.class,
             () -> new ResponseParser(is).parse()

@@ -55,7 +55,7 @@ public class ResponseParser {
     public static final DateTimeFormatter CRTM_DATE_FORMAT = DateTimeFormatter.ofPattern("dd-MM-yyyy").withLocale(Locale.getDefault());
     public static final Pattern RENEWAL_DATE_PATTERN = Pattern.compile("^(?<type>[\\s\\S]+): (?<date>[0-9]{2}-[0-9]{2}-[0-9]{4})$");
     public static final Pattern PROFILE_DATE_PATTERN = Pattern.compile("^Perfil (?<type>[\\s\\S]+) caduca: (?<date>[0-9]{2}-[0-9]{2}-[0-9]{4})$");
-    public static final Pattern PROFILE_SPLIT_PATTERN = Pattern.compile("<br>(\\s+)?");
+    public static final Pattern PROFILE_LINE_PATTERN = Pattern.compile("<br>(\\s+)?");
     public static final Pattern FORMAT_ERROR_PATTERN = Pattern.compile("^javascript:alert\\(\'(?<alertmsg>[\\s\\S]+)\'\\);$");
 
     public static void checkForErrors(Document document) throws ScraperException {
@@ -126,7 +126,7 @@ public class ResponseParser {
 
     public static EnumMap<CardType, LocalDate> extractProfiles(String string) {
         EnumMap<CardType, LocalDate> map = new EnumMap<>(CardType.class);
-        String[] parts = PROFILE_SPLIT_PATTERN.split(string);
+        String[] parts = PROFILE_LINE_PATTERN.split(string);
 
         for (String part : parts) {
             Matcher matcher = PROFILE_DATE_PATTERN.matcher(part);

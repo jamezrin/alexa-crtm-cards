@@ -5,6 +5,7 @@ public enum CardType {
     YOUTH("Joven"),
     BLUE("Tarjeta Azul"),
     SENIOR("Tercera Edad"),
+    CHILD("Infantil"), // not sure
     UNDEFINED("");
 
     private final String id;
