@@ -11,6 +11,7 @@ import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.impl.client.HttpClients;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -41,39 +42,19 @@ public class ScraperUtils {
             "MFAzAwM2cQBQMxNzUFAzE3NWcQBQMyNTEFAzI1MWdkZGQBRJ/qa2v0OAMMeRdkpd2XFiCltKiJjyXS6doF/w0EQg==";
     }
 
-    public static class ViewStateInfo {
-        private final String viewStateGenerator;
-        private final String viewState;
-
-        public ViewStateInfo(String viewStateGenerator, String viewState) {
-            this.viewStateGenerator = viewStateGenerator;
-            this.viewState = viewState;
-        }
-
-        public String getViewStateGenerator() {
-            return viewStateGenerator;
-        }
-
-        public String getViewState() {
-            return viewState;
-        }
-
-        public byte[] decodeViewState() {
-            return Base64.decode(viewState);
-        }
-    }
-
-    public static ViewStateInfo fetchViewState() throws IOException {
+    public static String fetchViewState() throws IOException {
         HttpGet viewRequest = new HttpGet(AppConsts.CRTM_QUERY_URI);
         HttpResponse viewResponse = httpClient.execute(viewRequest);
         HttpEntity viewResponseEntity = viewResponse.getEntity();
 
-        Document viewStateDocument = Jsoup.parse(viewResponseEntity.getContent(), StandardCharsets.UTF_8.name(), CRTM_BASE_URI);
-
-        return new ViewStateInfo(
-                viewStateDocument.getElementById("__VIEWSTATEGENERATOR").attr("value"),
-                viewStateDocument.getElementById("__VIEWSTATE").attr("value")
+        Document viewStateDocument = Jsoup.parse(
+                viewResponseEntity.getContent(),
+                StandardCharsets.UTF_8.name(),
+                CRTM_BASE_URI
         );
+
+        Element viewStateEl = viewStateDocument.getElementById("__VIEWSTATE");
+        return viewStateEl.attr("value");
     }
 
     public static void printStringBytes(String string) {
