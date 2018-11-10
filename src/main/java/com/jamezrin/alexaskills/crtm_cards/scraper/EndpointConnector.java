@@ -18,7 +18,7 @@ import static com.jamezrin.alexaskills.crtm_cards.scraper.ScraperUtils.makeDefau
 import static com.jamezrin.alexaskills.crtm_cards.scraper.ScraperUtils.makeHttpClient;
 
 public class EndpointConnector {
-    private static final HttpClient httpClient = makeHttpClient();
+    private static final HttpClient httpClient = makeHttpClient(5000);
 
     private final String viewState;
     private final String cardPrefix;

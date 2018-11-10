@@ -14,19 +14,13 @@ import org.jsoup.nodes.Document;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.concurrent.TimeUnit;
 
 import static com.jamezrin.alexaskills.crtm_cards.AppConsts.CRTM_BASE_URI;
 
 public class ScraperUtils {
-    /*
-        /wEPDwUJNzkyNzg1MDMyD2QWAmYPZBYCAgMPZBYEAgMPDxYCHgRUZXh0BSBTw6FiYWRvLCAxMCBkZSBub3ZpZW1icmUgZGUgMjAxOGRkAgUPZBYGAgEPDxYCHwAFCjEwLzExLzIwMThkZAIDDw8WAh8ABQUxNjo0MmRkAgUPZBYCAgMPZBYCZg9kFgICAQ8QZA8WBmYCAQICAgMCBAIFFgYQBQMtLS0FAy0tLWcQBQMwMDEFAzAwMWcQBQMwMDIFAzAwMmcQBQMwMDMFAzAwM2cQBQMxNzUFAzE3NWcQBQMyNTEFAzI1MWdkZGR9dqfr2AC/Nlee9Z0aGTuibu8nBNYADuaEARGNQOraSA==
-        /wEPDwUJNzkyNzg1MDMyD2QWAmYPZBYCAgMPZBYEAgMPDxYCHgRUZXh0BSBTw6FiYWRvLCAxMCBkZSBub3ZpZW1icmUgZGUgMjAxOGRkAgUPZBYOAgEPDxYCHwAFCjEwLzExLzIwMThkZAIDDw8WAh8ABQUxNjo0M2RkAgUPZBYEAgMPZBYCZg9kFgICAQ8QZA8WBmYCAQICAgMCBAIFFgYQBQMtLS0FAy0tLWcQBQMwMDEFAzAwMWcQBQMwMDIFAzAwMmcQBQMwMDMFAzAwM2cQBQMxNzUFAzE3NWcQBQMyNTEFAzI1MWdkZAIFD2QWBGYPZBYCAgEPFgIeB1Zpc2libGVnZAIBD2QWAgIBDw8WAh8ABU1FbiBlc3RvcyBtb21lbnRvcyBubyBlcyBwb3NpYmxlIHJlYWxpemFyIGxhIGNvbnN1bHRhLiBEaXNjdWxwZSBsYXMgbW9sZXN0aWFzLmRkAgcPZBYCZg9kFgICAQ9kFgICAQ8PFgIfAGVkZAIJDxYCHglpbm5lcmh0bWxlZAIPD2QWAgIBD2QWAgIBDw8WAh8AZWRkAhEPZBYCAgEPZBYCAgEPDxYCHwBlZGRkE2sDoEP1A7yxET4YrfiBHvG3UTFwTw2Ls5TqtEbf9O4=
-    */
-    private static final HttpClient httpClient = makeHttpClient();
+    private static final HttpClient httpClient = makeHttpClient(5000);
 
-    public static HttpClient makeHttpClient() {
-        int timeout = 5 * 1000;
+    public static HttpClient makeHttpClient(int timeout) {
         RequestConfig requestConfig = RequestConfig.custom()
                 .setConnectTimeout(timeout)
                 .setSocketTimeout(timeout)
@@ -41,10 +35,10 @@ public class ScraperUtils {
 
     public static String makeDefaultViewState() {
         return
-                "/wEPDwUJNzkyNzg1MDMyD2QWAmYPZBYCAgMPZBYEAgMPDxYCHgRUZXh0BSBTw6FiYWRvLCAxMCBkZSBub3ZpZW1icm" +
-                        "UgZGUgMjAxOGRkAgUPZBYGAgEPDxYCHwAFCjEwLzExLzIwMThkZAIDDw8WAh8ABQUxNDozMWRkAgUPZBYCAgMPZBYC" +
-                        "Zg9kFgICAQ8QZA8WBmYCAQICAgMCBAIFFgYQBQMtLS0FAy0tLWcQBQMwMDEFAzAwMWcQBQMwMDIFAzAwMmcQBQMwMD" +
-                        "MFAzAwM2cQBQMxNzUFAzE3NWcQBQMyNTEFAzI1MWdkZGQBRJ/qa2v0OAMMeRdkpd2XFiCltKiJjyXS6doF/w0EQg==";
+            "/wEPDwUJNzkyNzg1MDMyD2QWAmYPZBYCAgMPZBYEAgMPDxYCHgRUZXh0BSBTw6FiYWRvLCAxMCBkZSBub3ZpZW1icm" +
+            "UgZGUgMjAxOGRkAgUPZBYGAgEPDxYCHwAFCjEwLzExLzIwMThkZAIDDw8WAh8ABQUxNDozMWRkAgUPZBYCAgMPZBYC" +
+            "Zg9kFgICAQ8QZA8WBmYCAQICAgMCBAIFFgYQBQMtLS0FAy0tLWcQBQMwMDEFAzAwMWcQBQMwMDIFAzAwMmcQBQMwMD" +
+            "MFAzAwM2cQBQMxNzUFAzE3NWcQBQMyNTEFAzI1MWdkZGQBRJ/qa2v0OAMMeRdkpd2XFiCltKiJjyXS6doF/w0EQg==";
     }
 
     public static class ViewStateInfo {

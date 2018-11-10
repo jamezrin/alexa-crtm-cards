@@ -50,7 +50,7 @@ public class ResponseParser {
         return document;
     }
 
-    public static final DateTimeFormatter CRTM_DATE_FORMAT = DateTimeFormatter.ofPattern("dd-MM-yyyy").withLocale(Locale.getDefault());
+    public static final DateTimeFormatter CRTM_DATE_FORMAT = DateTimeFormatter.ofPattern("dd-MM-yyyy").withLocale(Locale.forLanguageTag("es-ES"));
     public static final Pattern RENEWAL_DATE_PATTERN = Pattern.compile("^(?<type>[\\s\\S]+): (?<date>[0-9]{2}-[0-9]{2}-[0-9]{4})$");
     public static final Pattern PROFILE_DATE_PATTERN = Pattern.compile("^Perfil (?<type>[\\s\\S]+) caduca: (?<date>[0-9]{2}-[0-9]{2}-[0-9]{4})$");
     public static final Pattern PROFILE_LINE_PATTERN = Pattern.compile("<br>(\\s+)?");
