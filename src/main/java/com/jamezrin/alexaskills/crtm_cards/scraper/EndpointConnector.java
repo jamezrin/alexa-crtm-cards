@@ -14,31 +14,27 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.jamezrin.alexaskills.crtm_cards.scraper.ScraperUtils.makeDefaultViewState;
 import static com.jamezrin.alexaskills.crtm_cards.scraper.ScraperUtils.makeHttpClient;
 
 public class EndpointConnector {
     private static final HttpClient httpClient = makeHttpClient();
 
+    private final String viewState;
     private final String cardPrefix;
     private final String cardNumber;
 
-    public EndpointConnector(String cardPrefix, String cardNumber) {
+    public EndpointConnector(String viewState, String cardPrefix, String cardNumber) {
+        this.viewState = viewState;
         this.cardPrefix = cardPrefix;
         this.cardNumber = cardNumber;
     }
 
+    public EndpointConnector(String cardPrefix, String cardNumber) {
+        this(makeDefaultViewState(), cardPrefix, cardNumber);
+    }
+
     public InputStream connect() throws Exception {
-        /* Doesn't work for some reason
-            ViewStateGenerator viewStateGenerator = new ViewStateGenerator();
-            String viewState = viewStateGenerator.generate();
-        */
-
-        String viewState =
-                "/wEPDwUJNzkyNzg1MDMyD2QWAmYPZBYCAgMPZBYEAgMPDxYCHgRUZXh0BSBTw6FiYWRvLCAxMCBkZSBub3ZpZW1icm" +
-                "UgZGUgMjAxOGRkAgUPZBYGAgEPDxYCHwAFCjEwLzExLzIwMThkZAIDDw8WAh8ABQUxNDozMWRkAgUPZBYCAgMPZBYC" +
-                "Zg9kFgICAQ8QZA8WBmYCAQICAgMCBAIFFgYQBQMtLS0FAy0tLWcQBQMwMDEFAzAwMWcQBQMwMDIFAzAwMmcQBQMwMD" +
-                "MFAzAwM2cQBQMxNzUFAzE3NWcQBQMyNTEFAzI1MWdkZGQBRJ/qa2v0OAMMeRdkpd2XFiCltKiJjyXS6doF/w0EQg==";
-
         HttpPost queryRequest = buildQueryRequest(viewState, cardPrefix, cardNumber);
         HttpResponse queryResponse = httpClient.execute(queryRequest);
         HttpEntity queryResponseEntity = queryResponse.getEntity();

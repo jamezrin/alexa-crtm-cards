@@ -26,17 +26,17 @@ public class ResponseParser {
     private final InputStream inputStream;
     private Document document;
 
-    public ResponseParser(InputStream inputStream) {
+    public ResponseParser(InputStream inputStream) throws ScraperException {
         this.inputStream = inputStream;
-    }
 
-    public Card parse() throws ScraperException {
         try {
             document = Jsoup.parse(inputStream, StandardCharsets.UTF_8.name(), CRTM_BASE_URI);
         } catch (IOException e) {
             throw new ScraperException("Could not parse the data returned by the endpoint", e);
         }
+    }
 
+    public Card parse() throws ScraperException {
         checkForErrors(document);
 
         return processCard(document);

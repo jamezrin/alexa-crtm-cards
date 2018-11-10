@@ -20,7 +20,7 @@ public class ViewStateGenerator {
     private final ZonedDateTime zonedDateTime;
 
     public ViewStateGenerator() {
-        this.zonedDateTime = ZonedDateTime.now();
+        this.zonedDateTime = ZonedDateTime.now(MADRID_ZONE);
     }
 
     public ViewStateGenerator(ZonedDateTime zonedDateTime) {
