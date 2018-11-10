@@ -1,9 +1,6 @@
 package com.jamezrin.alexaskills.crtm_cards.scraper;
 
-import com.jamezrin.alexaskills.crtm_cards.scraper.exceptions.InactiveCardNumberException;
-import com.jamezrin.alexaskills.crtm_cards.scraper.exceptions.InvalidCardNumberException;
-import com.jamezrin.alexaskills.crtm_cards.scraper.exceptions.NotExistentCardNumberException;
-import com.jamezrin.alexaskills.crtm_cards.scraper.exceptions.ScraperException;
+import com.jamezrin.alexaskills.crtm_cards.scraper.exceptions.*;
 import com.jamezrin.alexaskills.crtm_cards.scraper.types.Card;
 import com.jamezrin.alexaskills.crtm_cards.scraper.types.CardRenewal;
 import com.jamezrin.alexaskills.crtm_cards.scraper.types.CardType;
@@ -14,6 +11,7 @@ import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.EnumMap;
@@ -34,7 +32,7 @@ public class ResponseParser {
 
     public Card parse() throws ScraperException {
         try {
-            document = Jsoup.parse(inputStream, "UTF-8", CRTM_BASE_URI);
+            document = Jsoup.parse(inputStream, StandardCharsets.UTF_8.name(), CRTM_BASE_URI);
         } catch (IOException e) {
             throw new ScraperException("Could not parse the data returned by the endpoint", e);
         }
@@ -72,6 +70,8 @@ public class ResponseParser {
                         throw new NotExistentCardNumberException(content);
                     case "TARJETA NO ACTIVA":
                         throw new InactiveCardNumberException(content);
+                    case "En estos momentos no es posible realizar la consulta. Disculpe las molestias.":
+                        throw new NotAvailableException(content);
                     default:
                         throw new ScraperException(content);
                 }

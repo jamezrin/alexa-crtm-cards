@@ -17,6 +17,7 @@ import org.jsoup.nodes.Document;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,11 +35,6 @@ public class EndpointConnector {
     }
 
     public InputStream connect() throws Exception {
-        // TODO Construct and encode our own viewstate (probably a good idea, though seems difficult)
-        // TODO Or alternatively, cache this viewstate every second for requests that are done at the same time
-
-
-        // TODO Maybe it will work with a fixed viewState
         String viewState = "/wEPDwUJNzkyNzg1MDMyD2QWAmYPZBYCAgMPZBYEAgMPDxYCHgRUZXh0BSBWaWVybmVzLCAwOSBkZSBub3ZpZW1icmUgZGUgMjAxOGRkAgUPZBYGAgEPDxYCHwAFCjA5LzExLzIwMThkZAIDDw8WAh8ABQUwMToyOGRkAgUPZBYCAgMPZBYCZg9kFgICAQ8QZA8WBmYCAQICAgMCBAIFFgYQBQMtLS0FAy0tLWcQBQMwMDEFAzAwMWcQBQMwMDIFAzAwMmcQBQMwMDMFAzAwM2cQBQMxNzUFAzE3NWcQBQMyNTEFAzI1MWdkZGToxCNvBRzJegbOeKpmT39Wqme8cu0qpIFR9XJrvmmEcw==";
 
         HttpPost queryRequest = buildQueryRequest(viewState, cardPrefix, cardNumber);
@@ -70,8 +66,17 @@ public class EndpointConnector {
         params.add(new BasicNameValuePair("ctl00$cntPh$dpdCodigoTTP", cardPrefix));
         params.add(new BasicNameValuePair("ctl00$cntPh$txtNumTTP", cardNumber));
         params.add(new BasicNameValuePair("ctl00$cntPh$btnConsultar", "Continuar"));
-        httpPost.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
+        httpPost.setEntity(new UrlEncodedFormEntity(params, StandardCharsets.UTF_8));
 
         return httpPost;
+    }
+
+    public static String fetchViewState() throws IOException {
+        HttpGet viewRequest = new HttpGet(AppConsts.CRTM_QUERY_URI);
+        HttpResponse viewResponse = httpClient.execute(viewRequest);
+        HttpEntity viewResponseEntity = viewResponse.getEntity();
+
+        Document viewStateDocument = Jsoup.parse(viewResponseEntity.getContent(), StandardCharsets.UTF_8.name(), CRTM_BASE_URI);
+        return viewStateDocument.getElementById("__VIEWSTATE").attr("value");
     }
 }
