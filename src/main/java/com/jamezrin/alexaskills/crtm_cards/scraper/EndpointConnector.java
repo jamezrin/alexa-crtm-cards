@@ -23,7 +23,7 @@ import java.util.List;
 import static com.jamezrin.alexaskills.crtm_cards.AppConsts.CRTM_BASE_URI;
 
 public class EndpointConnector {
-    private static final HttpClient httpclient = makeHttpClient();
+    private static final HttpClient httpClient = makeHttpClient();
 
     private final String cardPrefix;
     private final String cardNumber;
@@ -42,7 +42,7 @@ public class EndpointConnector {
         String viewState = "/wEPDwUJNzkyNzg1MDMyD2QWAmYPZBYCAgMPZBYEAgMPDxYCHgRUZXh0BSBWaWVybmVzLCAwOSBkZSBub3ZpZW1icmUgZGUgMjAxOGRkAgUPZBYGAgEPDxYCHwAFCjA5LzExLzIwMThkZAIDDw8WAh8ABQUwMToyOGRkAgUPZBYCAgMPZBYCZg9kFgICAQ8QZA8WBmYCAQICAgMCBAIFFgYQBQMtLS0FAy0tLWcQBQMwMDEFAzAwMWcQBQMwMDIFAzAwMmcQBQMwMDMFAzAwM2cQBQMxNzUFAzE3NWcQBQMyNTEFAzI1MWdkZGToxCNvBRzJegbOeKpmT39Wqme8cu0qpIFR9XJrvmmEcw==";
 
         HttpPost queryRequest = buildQueryRequest(viewState, cardPrefix, cardNumber);
-        HttpResponse queryResponse = httpclient.execute(queryRequest);
+        HttpResponse queryResponse = httpClient.execute(queryRequest);
         HttpEntity queryResponseEntity = queryResponse.getEntity();
 
         return queryResponseEntity.getContent();
@@ -73,15 +73,5 @@ public class EndpointConnector {
         httpPost.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
 
         return httpPost;
-    }
-
-    public static String fetchViewState() throws IOException {
-        HttpGet viewRequest = new HttpGet(AppConsts.CRTM_QUERY_URI);
-        HttpResponse viewResponse = httpclient.execute(viewRequest);
-        HttpEntity viewResponseEntity = viewResponse.getEntity();
-
-        Document viewStateDocument = Jsoup.parse(viewResponseEntity.getContent(), "UTF-8", CRTM_BASE_URI);
-        System.out.println(viewStateDocument.html());
-        return viewStateDocument.getElementById("__VIEWSTATE").attr("value");
     }
 }
