@@ -6,22 +6,15 @@ import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.conn.ssl.NoopHostnameVerifier;
-import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.jamezrin.alexaskills.crtm_cards.AppConsts.CRTM_BASE_URI;
+import static com.jamezrin.alexaskills.crtm_cards.scraper.ScraperUtils.makeHttpClient;
 
 public class EndpointConnector {
     private static final HttpClient httpClient = makeHttpClient();
@@ -35,7 +28,16 @@ public class EndpointConnector {
     }
 
     public InputStream connect() throws Exception {
-        String viewState = "/wEPDwUJNzkyNzg1MDMyD2QWAmYPZBYCAgMPZBYEAgMPDxYCHgRUZXh0BSBWaWVybmVzLCAwOSBkZSBub3ZpZW1icmUgZGUgMjAxOGRkAgUPZBYGAgEPDxYCHwAFCjA5LzExLzIwMThkZAIDDw8WAh8ABQUwMToyOGRkAgUPZBYCAgMPZBYCZg9kFgICAQ8QZA8WBmYCAQICAgMCBAIFFgYQBQMtLS0FAy0tLWcQBQMwMDEFAzAwMWcQBQMwMDIFAzAwMmcQBQMwMDMFAzAwM2cQBQMxNzUFAzE3NWcQBQMyNTEFAzI1MWdkZGToxCNvBRzJegbOeKpmT39Wqme8cu0qpIFR9XJrvmmEcw==";
+        /* Doesn't work for some reason
+            ViewStateGenerator viewStateGenerator = new ViewStateGenerator();
+            String viewState = viewStateGenerator.generate();
+        */
+
+        String viewState =
+                "/wEPDwUJNzkyNzg1MDMyD2QWAmYPZBYCAgMPZBYEAgMPDxYCHgRUZXh0BSBTw6FiYWRvLCAxMCBkZSBub3ZpZW1icm" +
+                "UgZGUgMjAxOGRkAgUPZBYGAgEPDxYCHwAFCjEwLzExLzIwMThkZAIDDw8WAh8ABQUxNDozMWRkAgUPZBYCAgMPZBYC" +
+                "Zg9kFgICAQ8QZA8WBmYCAQICAgMCBAIFFgYQBQMtLS0FAy0tLWcQBQMwMDEFAzAwMWcQBQMwMDIFAzAwMmcQBQMwMD" +
+                "MFAzAwM2cQBQMxNzUFAzE3NWcQBQMyNTEFAzI1MWdkZGQBRJ/qa2v0OAMMeRdkpd2XFiCltKiJjyXS6doF/w0EQg==";
 
         HttpPost queryRequest = buildQueryRequest(viewState, cardPrefix, cardNumber);
         HttpResponse queryResponse = httpClient.execute(queryRequest);
@@ -44,15 +46,7 @@ public class EndpointConnector {
         return queryResponseEntity.getContent();
     }
 
-    public static HttpClient makeHttpClient() {
-        return HttpClients
-                .custom()
-                .setSSLHostnameVerifier(NoopHostnameVerifier.INSTANCE)
-                .setUserAgent(AppConsts.CRTM_USER_AGENT)
-                .build();
-    }
-
-    public static HttpPost buildQueryRequest(String viewState, String cardPrefix, String cardNumber) throws UnsupportedEncodingException {
+    public static HttpPost buildQueryRequest(String viewState, String cardPrefix, String cardNumber) {
         HttpPost httpPost = new HttpPost(AppConsts.CRTM_QUERY_URI);
 
         List<NameValuePair> params = new ArrayList<>();
@@ -69,14 +63,5 @@ public class EndpointConnector {
         httpPost.setEntity(new UrlEncodedFormEntity(params, StandardCharsets.UTF_8));
 
         return httpPost;
-    }
-
-    public static String fetchViewState() throws IOException {
-        HttpGet viewRequest = new HttpGet(AppConsts.CRTM_QUERY_URI);
-        HttpResponse viewResponse = httpClient.execute(viewRequest);
-        HttpEntity viewResponseEntity = viewResponse.getEntity();
-
-        Document viewStateDocument = Jsoup.parse(viewResponseEntity.getContent(), StandardCharsets.UTF_8.name(), CRTM_BASE_URI);
-        return viewStateDocument.getElementById("__VIEWSTATE").attr("value");
     }
 }
