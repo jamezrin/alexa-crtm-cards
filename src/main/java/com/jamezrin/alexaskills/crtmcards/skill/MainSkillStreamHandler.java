@@ -1,9 +1,11 @@
-package com.jamezrin.alexaskills.crtm_cards.skill;
+package com.jamezrin.alexaskills.crtmcards.skill;
 
 import com.amazon.ask.Skill;
 import com.amazon.ask.SkillStreamHandler;
 import com.amazon.ask.Skills;
-import com.jamezrin.alexaskills.crtm_cards.skill.handlers.*;
+import com.jamezrin.alexaskills.crtmcards.skill.handlers.*;
+
+import static com.jamezrin.alexaskills.crtmcards.AppConsts.SKILL_ID;
 
 public class MainSkillStreamHandler extends SkillStreamHandler {
     private static Skill getSkill() {
@@ -15,8 +17,7 @@ public class MainSkillStreamHandler extends SkillStreamHandler {
                         new LaunchRequestHandler(),
                         new SessionEndedRequestHandler(),
                         new FallbackIntentHandler())
-                // Add your skill id below
-                //.withSkillId("")
+                .withSkillId(SKILL_ID)
                 .build();
     }
 

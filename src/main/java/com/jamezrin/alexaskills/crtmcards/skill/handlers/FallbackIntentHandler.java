@@ -1,4 +1,4 @@
-package com.jamezrin.alexaskills.crtm_cards.skill.handlers;
+package com.jamezrin.alexaskills.crtmcards.skill.handlers;
 
 import com.amazon.ask.dispatcher.request.handler.HandlerInput;
 import com.amazon.ask.dispatcher.request.handler.RequestHandler;

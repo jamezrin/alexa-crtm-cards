@@ -1,6 +1,6 @@
-package com.jamezrin.alexaskills.crtm_cards.scraper;
+package com.jamezrin.alexaskills.crtmcards.scraper;
 
-import com.jamezrin.alexaskills.crtm_cards.AppConsts;
+import com.jamezrin.alexaskills.crtmcards.AppConsts;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -14,8 +14,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.jamezrin.alexaskills.crtm_cards.scraper.ScraperUtils.makeDefaultViewState;
-import static com.jamezrin.alexaskills.crtm_cards.scraper.ScraperUtils.makeHttpClient;
+import static com.jamezrin.alexaskills.crtmcards.scraper.ScraperUtils.makeDefaultViewState;
+import static com.jamezrin.alexaskills.crtmcards.scraper.ScraperUtils.makeHttpClient;
 
 public class EndpointConnector {
     private static final HttpClient httpClient = makeHttpClient(5000);

@@ -1,8 +1,8 @@
-import com.jamezrin.alexaskills.crtm_cards.scraper.EndpointConnector;
-import com.jamezrin.alexaskills.crtm_cards.scraper.ResponseParser;
-import com.jamezrin.alexaskills.crtm_cards.scraper.exceptions.InactiveCardNumberException;
-import com.jamezrin.alexaskills.crtm_cards.scraper.exceptions.InvalidCardNumberException;
-import com.jamezrin.alexaskills.crtm_cards.scraper.types.Card;
+import com.jamezrin.alexaskills.crtmcards.scraper.EndpointConnector;
+import com.jamezrin.alexaskills.crtmcards.scraper.ResponseParser;
+import com.jamezrin.alexaskills.crtmcards.scraper.exceptions.InactiveCardNumberException;
+import com.jamezrin.alexaskills.crtmcards.scraper.exceptions.InvalidCardNumberException;
+import com.jamezrin.alexaskills.crtmcards.scraper.types.Card;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.junit.jupiter.api.Test;

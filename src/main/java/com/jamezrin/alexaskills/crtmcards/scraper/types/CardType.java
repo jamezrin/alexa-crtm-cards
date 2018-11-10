@@ -1,4 +1,4 @@
-package com.jamezrin.alexaskills.crtm_cards.scraper.types;
+package com.jamezrin.alexaskills.crtmcards.scraper.types;
 
 public enum CardType {
     NORMAL("Normal"),

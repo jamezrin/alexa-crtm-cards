@@ -1,9 +1,9 @@
-package com.jamezrin.alexaskills.crtm_cards.scraper;
+package com.jamezrin.alexaskills.crtmcards.scraper;
 
-import com.jamezrin.alexaskills.crtm_cards.scraper.exceptions.*;
-import com.jamezrin.alexaskills.crtm_cards.scraper.types.Card;
-import com.jamezrin.alexaskills.crtm_cards.scraper.types.CardRenewal;
-import com.jamezrin.alexaskills.crtm_cards.scraper.types.CardType;
+import com.jamezrin.alexaskills.crtmcards.scraper.exceptions.*;
+import com.jamezrin.alexaskills.crtmcards.scraper.types.Card;
+import com.jamezrin.alexaskills.crtmcards.scraper.types.CardRenewal;
+import com.jamezrin.alexaskills.crtmcards.scraper.types.CardType;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -20,7 +20,7 @@ import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static com.jamezrin.alexaskills.crtm_cards.AppConsts.CRTM_BASE_URI;
+import static com.jamezrin.alexaskills.crtmcards.AppConsts.CRTM_BASE_URI;
 
 public class ResponseParser {
     private final InputStream inputStream;

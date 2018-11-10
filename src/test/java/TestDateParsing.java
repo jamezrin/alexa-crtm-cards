@@ -1,4 +1,4 @@
-import com.jamezrin.alexaskills.crtm_cards.scraper.ResponseParser;
+import com.jamezrin.alexaskills.crtmcards.scraper.ResponseParser;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;

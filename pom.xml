@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.jamezrin.alexaskills</groupId>
-    <artifactId>crtm_cards</artifactId>
+    <artifactId>crtmcards</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <dependencies>

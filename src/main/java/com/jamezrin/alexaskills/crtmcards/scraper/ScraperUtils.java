@@ -1,7 +1,7 @@
-package com.jamezrin.alexaskills.crtm_cards.scraper;
+package com.jamezrin.alexaskills.crtmcards.scraper;
 
 import com.amazonaws.util.Base64;
-import com.jamezrin.alexaskills.crtm_cards.AppConsts;
+import com.jamezrin.alexaskills.crtmcards.AppConsts;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -16,7 +16,7 @@ import org.jsoup.nodes.Element;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
-import static com.jamezrin.alexaskills.crtm_cards.AppConsts.CRTM_BASE_URI;
+import static com.jamezrin.alexaskills.crtmcards.AppConsts.CRTM_BASE_URI;
 
 public class ScraperUtils {
     private static final HttpClient httpClient = makeHttpClient(5000);

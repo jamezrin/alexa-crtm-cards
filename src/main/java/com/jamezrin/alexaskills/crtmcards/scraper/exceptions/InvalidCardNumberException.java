@@ -1,4 +1,4 @@
-package com.jamezrin.alexaskills.crtm_cards.scraper.exceptions;
+package com.jamezrin.alexaskills.crtmcards.scraper.exceptions;
 
 public class InvalidCardNumberException extends ScraperException {
     public InvalidCardNumberException(String message) {
