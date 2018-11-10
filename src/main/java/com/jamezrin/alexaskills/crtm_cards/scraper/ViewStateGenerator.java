@@ -2,9 +2,13 @@ package com.jamezrin.alexaskills.crtm_cards.scraper;
 
 import com.amazonaws.util.Base64;
 
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -228,6 +232,21 @@ public class ViewStateGenerator {
         baos.write(0x64); // Empty node
         baos.write(0x64); // Empty node
         baos.write(0x64); // Empty node
+
+        // Start the 32 bytes of HMACSHA256 sig
+        // https://stackoverflow.com/questions/3759536/asp-net-machinekey-config-section-default-location
+        // https://security.stackexchange.com/questions/138218/what-is-the-purpose-of-the-secret-key-in-macs-viewstate-asp-net
+        try {
+            Mac sha256hmac = Mac.getInstance("HmacSHA256");
+            System.out.println(sha256hmac.getAlgorithm());
+            SecretKeySpec secretKeySpec = new SecretKeySpec(new byte[]{0x76, 0x1C, 0x03, (byte)0xE9}, sha256hmac.getAlgorithm());
+            sha256hmac.init(secretKeySpec);
+            byte[] res = sha256hmac.doFinal(baos.toByteArray());
+            baos.write(res);
+        } catch (NoSuchAlgorithmException | InvalidKeyException e) {
+            e.printStackTrace();
+        }
+        /*
         baos.write(0x01); // Unknown
         baos.write(0x44); // Unknown
         baos.write(0x9f); // Unknown
@@ -240,11 +259,11 @@ public class ViewStateGenerator {
         baos.write(0x0c); // Unknown
         baos.write(0x79); // Unknown
         baos.write(0x17); // Unknown
-        baos.write(0x64); // Empty node
+        baos.write(0x64); // Unknown
         baos.write(0xa5); // Unknown
         baos.write(0xdd); // Unknown
         baos.write(0x97); // Unknown
-        baos.write(0x16); // Array list
+        baos.write(0x16); // Unknown
         baos.write(0x20); // Unknown
         baos.write(0xa5); // Unknown
         baos.write(0xb4); // Unknown
@@ -255,11 +274,12 @@ public class ViewStateGenerator {
         baos.write(0xd2); // Unknown
         baos.write(0xe9); // Unknown
         baos.write(0xda); // Unknown
-        baos.write(0x05); // String container
+        baos.write(0x05); // Unknown
         baos.write(0xff); // Unknown
         baos.write(0x0d); // Unknown
         baos.write(0x04); // Unknown
         baos.write(0x42); // Unknown
+        */
 
         return Base64.encodeAsString(baos.toByteArray());
     }
