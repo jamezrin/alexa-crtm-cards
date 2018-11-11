@@ -1,3 +1,33 @@
-https://www.baeldung.com/httpclient-post-http-request
+Alexa, pregúntale al consorcio de transportes cuanto le queda a mi tarjeta
 
-http://viewstatedecoder.azurewebsites.net/
+Alexa, pregúntale al consorcio de transportes cuantos dias le quedan a mi tarjeta
+
+Alexa, pregúntale al consorcio de transportes cuando caduca mi tarjeta
+
+Alexa, pregúntale al consorcio de transportes cuando va a caducar mi tarjeta
+
+Alexa, pregúntale al consorcio de transportes cuando me caduca mi tarjeta
+
+Alexa, pregúntale al consorcio de transportes que dia caduca mi tarjeta
+
+Alexa, pregúntale al consorcio de transportes que dia va a dejar de funcionar mi tarjeta
+
+Alexa, pregúntale al consorcio de transportes que dia va a dejar de ser valida mi tarjeta
+
+Alexa, pregúntale al consorcio de transportes hasta que dia puedo utilizar mi tarjeta
+
+Alexa, pregúntale al consorcio de transportes cual es el ultimo dia en el que puedo utilizar mi tarjeta
+
+Alexa, pregúntale al consorcio de transportes el dia en el que tengo que recargar mi tarjeta
+
+Alexa, pregúntale al consorcio de transportes hasta que dia puedo utilizar mi tarjeta
+
+Alexa, pregúntale al consorcio de transportes hasta que dia puedo seguir utilizando mi tarjeta
+
+Alexa, pregúntale al consorcio de transportes el ultimo dia en el que tengo que recargar mi tarjeta
+
+
+
+¡Todavía no tengo guardada tu tarjeta!
+Para que sea util necesito unos numeros que puedes encontrar en la parte frontal de tu tarjeta
+...

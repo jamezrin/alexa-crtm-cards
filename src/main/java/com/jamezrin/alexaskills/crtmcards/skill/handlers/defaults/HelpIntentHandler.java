@@ -11,7 +11,7 @@
      the specific language governing permissions and limitations under the License.
 */
 
-package com.jamezrin.alexaskills.crtmcards.skill.handlers;
+package com.jamezrin.alexaskills.crtmcards.skill.handlers.defaults;
 
 import com.amazon.ask.dispatcher.request.handler.HandlerInput;
 import com.amazon.ask.dispatcher.request.handler.RequestHandler;
