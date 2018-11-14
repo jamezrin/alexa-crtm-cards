@@ -1,7 +1,6 @@
 package com.jamezrin.alexaskills.crtmcards.scraper;
 
 import com.amazonaws.util.Base64;
-import com.jamezrin.alexaskills.crtmcards.AppConsts;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -17,6 +16,8 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
 import static com.jamezrin.alexaskills.crtmcards.AppConsts.CRTM_BASE_URI;
+import static com.jamezrin.alexaskills.crtmcards.AppConsts.CRTM_QUERY_URI;
+import static com.jamezrin.alexaskills.crtmcards.AppConsts.CRTM_USER_AGENT;
 
 public class ScraperUtils {
     private static final HttpClient httpClient = makeHttpClient(5000);
@@ -30,7 +31,7 @@ public class ScraperUtils {
         return HttpClients.custom()
                 .setDefaultRequestConfig(requestConfig)
                 .setSSLHostnameVerifier(NoopHostnameVerifier.INSTANCE)
-                .setUserAgent(AppConsts.CRTM_USER_AGENT)
+                .setUserAgent(CRTM_USER_AGENT)
                 .build();
     }
 
@@ -43,7 +44,7 @@ public class ScraperUtils {
     }
 
     public static String fetchViewState() throws IOException {
-        HttpGet viewRequest = new HttpGet(AppConsts.CRTM_QUERY_URI);
+        HttpGet viewRequest = new HttpGet(CRTM_QUERY_URI);
         HttpResponse viewResponse = httpClient.execute(viewRequest);
         HttpEntity viewResponseEntity = viewResponse.getEntity();
 

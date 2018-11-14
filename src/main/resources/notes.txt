@@ -1,12 +1,25 @@
+INFO: https://github.com/alexa/alexa-skills-kit-sdk-for-java/tree/2.0.x/samples/colorpicker
+LOS MODELOS SE CARGAN EN EL ROL DE AWS LAMBDA, NUESTRO PROGRAMA NO LOS CARGA...
+
+==== GENERAL INFO
+
+Alexa, abre consorcio de transportes
+
+Alexa, lanza consorcio de transportes
+
+
+
+==== CALCULATE REMAINING DAYS
+
 Alexa, pregúntale al consorcio de transportes cuanto le queda a mi tarjeta
 
 Alexa, pregúntale al consorcio de transportes cuantos dias le quedan a mi tarjeta
 
+Alexa, pregúntale al consorcio de transportes
 
 
 
-
-
+==== GET EXPIRATION DATE
 
 Alexa, pregúntale al consorcio de transportes cuando caduca mi tarjeta
 
@@ -32,11 +45,14 @@ Alexa, pregúntale al consorcio de transportes hasta que dia puedo seguir utiliz
 
 Alexa, pregúntale al consorcio de transportes el ultimo dia en el que tengo que recargar mi tarjeta
 
-
+=== GET CARD NUMBER
 
 ¡Todavía no tengo guardada tu tarjeta!
+!Todavía no me has dado tu tarjeta!
 
-Necesito unos numeros de tu tarjeta
+Necesito que me digas unos dígitos de tu tarjeta de transportes
+Necesito que me des unos numeros de tu tarjeta de transportes
+
 Los puedes encontrar al lado de tu foto
 
 Ahora bien, dime los 3 últimos numeros de la primera linea

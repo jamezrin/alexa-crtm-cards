@@ -4,6 +4,8 @@ import com.jamezrin.alexaskills.crtmcards.scraper.exceptions.*;
 import com.jamezrin.alexaskills.crtmcards.scraper.types.Card;
 import com.jamezrin.alexaskills.crtmcards.scraper.types.CardRenewal;
 import com.jamezrin.alexaskills.crtmcards.scraper.types.CardType;
+import org.apache.http.HttpResponse;
+import org.apache.http.entity.ContentType;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -11,7 +13,7 @@ import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
+import java.nio.charset.Charset;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.EnumMap;
@@ -24,16 +26,30 @@ import static com.jamezrin.alexaskills.crtmcards.AppConsts.CRTM_BASE_URI;
 
 public class ResponseParser {
     private final InputStream inputStream;
-    private Document document;
+    private final Charset charset;
+    private final Document document;
 
-    public ResponseParser(InputStream inputStream) throws ScraperException {
+    public ResponseParser(InputStream inputStream, Charset charset) throws ScraperException {
         this.inputStream = inputStream;
+        this.charset = charset;
 
         try {
-            document = Jsoup.parse(inputStream, StandardCharsets.UTF_8.name(), CRTM_BASE_URI);
+            document = Jsoup.parse(
+                    inputStream,
+                    charset.name(),
+                    CRTM_BASE_URI
+            );
+
         } catch (IOException e) {
             throw new ScraperException("Could not parse the data returned by the endpoint", e);
         }
+    }
+
+    public ResponseParser(HttpResponse response) throws Exception {
+        this(
+                response.getEntity().getContent(),
+                ContentType.getOrDefault(response.getEntity()).getCharset()
+        );
     }
 
     public Card parse() throws ScraperException {
@@ -46,6 +62,10 @@ public class ResponseParser {
         return inputStream;
     }
 
+    public Charset getCharset() {
+        return charset;
+    }
+
     public Document getDocument() {
         return document;
     }
@@ -53,15 +73,15 @@ public class ResponseParser {
     public static final DateTimeFormatter CRTM_DATE_FORMAT = DateTimeFormatter.ofPattern("dd-MM-yyyy").withLocale(Locale.forLanguageTag("es-ES"));
     public static final Pattern RENEWAL_DATE_PATTERN = Pattern.compile("^(?<type>[\\s\\S]+): (?<date>[0-9]{2}-[0-9]{2}-[0-9]{4})$");
     public static final Pattern PROFILE_DATE_PATTERN = Pattern.compile("^Perfil (?<type>[\\s\\S]+) caduca: (?<date>[0-9]{2}-[0-9]{2}-[0-9]{4})$");
+    public static final Pattern FORMAT_ERROR_PATTERN = Pattern.compile("^javascript:alert\\(\'(?<message>Error. [\\s\\S]+)\'\\);$");
     public static final Pattern PROFILE_LINE_PATTERN = Pattern.compile("<br>(\\s+)?");
-    public static final Pattern FORMAT_ERROR_PATTERN = Pattern.compile("^javascript:alert\\(\'(?<alertmsg>[\\s\\S]+)\'\\);$");
 
     public static void checkForErrors(Document document) throws ScraperException {
-        checkForErrorMsg(document.getElementById("ctl00_cntPh_lblError"));
+        checkForErrorLabel(document.getElementById("ctl00_cntPh_lblError"));
         checkForErrorScript(document.getElementsByTag("script"));
     }
 
-    private static void checkForErrorMsg(Element element) throws ScraperException {
+    public static void checkForErrorLabel(Element element) throws ScraperException {
         if (element != null) {
             String content = element.text();
             if (!content.isEmpty()) {
@@ -79,7 +99,7 @@ public class ResponseParser {
         }
     }
 
-    private static void checkForErrorScript(Elements elements) throws ScraperException {
+    public static void checkForErrorScript(Elements elements) throws ScraperException {
         if (elements != null) {
             for (Element element : elements) {
                 Matcher matcher = FORMAT_ERROR_PATTERN.matcher(element.html());
@@ -88,7 +108,8 @@ public class ResponseParser {
                     continue;
                 }
 
-                String content = matcher.group("alertmsg");
+                String content = matcher.group("message");
+
                 throw new InvalidCardNumberException(content);
             }
         }
@@ -101,7 +122,7 @@ public class ResponseParser {
         // Dates of renewals
         Element resultsTableEl = document.getElementById("ctl00_cntPh_tableResultados");
         Element resultRowEl = resultsTableEl.getElementsByTag("td").get(1);
-        Elements results = resultRowEl.getElementsByTag("span");
+        Elements resultsEls = resultRowEl.getElementsByTag("span");
 
         // Card expiration date
         Element expirationEl = document.getElementById("ctl00_cntPh_lblFechaCaducidadTarjeta");
@@ -111,17 +132,42 @@ public class ResponseParser {
 
         return new Card(
                 fullNumEl.text(),
-                results.get(0).text(),
-                CardType.fromId(results.get(1).text()),
+                resultsEls.get(0).text(),
+                CardType.fromId(resultsEls.get(1).text()),
 
                 new CardRenewal[]{
-                        extractRenewal(results.subList(2, 6)),
-                        extractRenewal(results.subList(6, 10))
+                        extractRenewal(resultsEls.subList(2, 6)),
+                        extractRenewal(resultsEls.subList(6, 10))
                 },
 
                 extractSimpleDate(expirationEl.text()),
                 extractProfiles(profilesEl.html())
         );
+    }
+
+    public static CardRenewal extractRenewal(List<Element> list) {
+        return new CardRenewal(
+                extractSimpleDate(list.get(0).text()),
+                extractSimpleDate(list.get(1).text()),
+                extractSimpleDate(list.get(2).text()),
+                extractSimpleDate(list.get(3).text())
+        );
+    }
+
+    public static LocalDate extractSimpleDate(String string) {
+        if (string == null) {
+            return null;
+        }
+
+        Matcher matcher = RENEWAL_DATE_PATTERN.matcher(string);
+
+        if (!matcher.find()) {
+            return null;
+        }
+
+        String dateString = matcher.group("date");
+
+        return LocalDate.parse(dateString, CRTM_DATE_FORMAT);
     }
 
     public static EnumMap<CardType, LocalDate> extractProfiles(String string) {
@@ -149,30 +195,5 @@ public class ResponseParser {
         }
 
         return map;
-    }
-
-    public static CardRenewal extractRenewal(List<Element> list) {
-        return new CardRenewal(
-                extractSimpleDate(list.get(0).text()),
-                extractSimpleDate(list.get(1).text()),
-                extractSimpleDate(list.get(2).text()),
-                extractSimpleDate(list.get(3).text())
-        );
-    }
-
-    public static LocalDate extractSimpleDate(String string) {
-        if (string == null) {
-            return null;
-        }
-
-        Matcher matcher = RENEWAL_DATE_PATTERN.matcher(string);
-
-        if (!matcher.find()) {
-            return null;
-        }
-
-        String dateString = matcher.group("date");
-
-        return LocalDate.parse(dateString, CRTM_DATE_FORMAT);
     }
 }

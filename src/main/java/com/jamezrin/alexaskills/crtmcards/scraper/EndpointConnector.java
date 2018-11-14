@@ -1,24 +1,23 @@
 package com.jamezrin.alexaskills.crtmcards.scraper;
 
-import com.jamezrin.alexaskills.crtmcards.AppConsts;
-import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.message.BasicNameValuePair;
+import org.jsoup.helper.Validate;
 
-import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.jamezrin.alexaskills.crtmcards.AppConsts.CRTM_QUERY_URI;
 import static com.jamezrin.alexaskills.crtmcards.scraper.ScraperUtils.makeDefaultViewState;
 import static com.jamezrin.alexaskills.crtmcards.scraper.ScraperUtils.makeHttpClient;
 
 public class EndpointConnector {
-    private static final HttpClient httpClient = makeHttpClient(5000);
+    private static final HttpClient httpClient = makeHttpClient(20000);
 
     private final String viewState;
     private final String cardPrefix;
@@ -31,19 +30,28 @@ public class EndpointConnector {
     }
 
     public EndpointConnector(String cardPrefix, String cardNumber) {
-        this(makeDefaultViewState(), cardPrefix, cardNumber);
+        this(
+                makeDefaultViewState(),
+                cardPrefix,
+                cardNumber
+        );
     }
 
-    public InputStream connect() throws Exception {
-        HttpPost queryRequest = buildQueryRequest(viewState, cardPrefix, cardNumber);
-        HttpResponse queryResponse = httpClient.execute(queryRequest);
-        HttpEntity queryResponseEntity = queryResponse.getEntity();
+    public HttpPost makeRequest()  {
+        return buildQueryRequest(
+                viewState,
+                cardPrefix,
+                cardNumber
+        );
+    }
 
-        return queryResponseEntity.getContent();
+    public HttpResponse connect() throws Exception {
+        HttpPost queryRequest = makeRequest();
+        return httpClient.execute(queryRequest);
     }
 
     public static HttpPost buildQueryRequest(String viewState, String cardPrefix, String cardNumber) {
-        HttpPost httpPost = new HttpPost(AppConsts.CRTM_QUERY_URI);
+        HttpPost httpPost = new HttpPost(CRTM_QUERY_URI);
 
         List<NameValuePair> params = new ArrayList<>();
         params.add(new BasicNameValuePair("__SCROLLPOSITIONY", "530"));
