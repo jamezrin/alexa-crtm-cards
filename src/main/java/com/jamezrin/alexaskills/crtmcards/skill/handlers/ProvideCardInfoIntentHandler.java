@@ -11,32 +11,37 @@
      the specific language governing permissions and limitations under the License.
 */
 
-package com.jamezrin.alexaskills.crtmcards.skill.handlers.defaults;
+package com.jamezrin.alexaskills.crtmcards.skill.handlers;
 
 import com.amazon.ask.dispatcher.request.handler.HandlerInput;
 import com.amazon.ask.dispatcher.request.handler.RequestHandler;
-import com.amazon.ask.model.LaunchRequest;
+import com.amazon.ask.model.Intent;
+import com.amazon.ask.model.IntentRequest;
+import com.amazon.ask.model.Request;
 import com.amazon.ask.model.Response;
+import com.amazon.ask.response.ResponseBuilder;
+import com.jamezrin.alexaskills.crtmcards.skill.CardInfo;
 
 import java.util.Optional;
 
-import static com.amazon.ask.request.Predicates.requestType;
+import static com.amazon.ask.request.Predicates.intentName;
 
-public class LaunchRequestHandler implements RequestHandler {
+public class ProvideCardInfoIntentHandler implements RequestHandler {
 
     @Override
     public boolean canHandle(HandlerInput input) {
-        return input.matches(requestType(LaunchRequest.class));
+        return input.matches(intentName("ProvideCardInfoIntent"));
     }
 
     @Override
     public Optional<Response> handle(HandlerInput input) {
-        String speechText = "Welcome to the Alexa Skills Kit, you can say hello";
-        return input.getResponseBuilder()
-                .withSpeech(speechText)
-                .withSimpleCard("HelloWorld", speechText)
-                .withReprompt(speechText)
-                .build();
-    }
+        Request request = input.getRequestEnvelope().getRequest();
+        IntentRequest intentRequest = (IntentRequest) request;
+        Intent intent = intentRequest.getIntent();
+        ResponseBuilder builder = input.getResponseBuilder();
 
+
+
+        return builder.build();
+    }
 }

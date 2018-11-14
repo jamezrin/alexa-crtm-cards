@@ -1,6 +1,13 @@
 INFO: https://github.com/alexa/alexa-skills-kit-sdk-for-java/tree/2.0.x/samples/colorpicker
 LOS MODELOS SE CARGAN EN EL ROL DE AWS LAMBDA, NUESTRO PROGRAMA NO LOS CARGA...
 
+ExpirationDateIntentHandler
+ProvideCardInfoIntentHandler
+OverviewSkillIntentHandler
+RemainingDaysIntentHandler
+HelpIntentHandler
+LaunchRequestHandler
+
 ==== GENERAL INFO
 
 Alexa, abre consorcio de transportes

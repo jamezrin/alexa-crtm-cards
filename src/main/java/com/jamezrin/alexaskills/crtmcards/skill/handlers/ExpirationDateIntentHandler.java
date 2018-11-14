@@ -16,25 +16,39 @@ package com.jamezrin.alexaskills.crtmcards.skill.handlers;
 import com.amazon.ask.dispatcher.request.handler.HandlerInput;
 import com.amazon.ask.dispatcher.request.handler.RequestHandler;
 import com.amazon.ask.model.Response;
+import com.amazon.ask.response.ResponseBuilder;
+import com.jamezrin.alexaskills.crtmcards.AppConsts;
+import com.jamezrin.alexaskills.crtmcards.skill.CardInfo;
 
 import java.util.Optional;
 
 import static com.amazon.ask.request.Predicates.intentName;
+import static com.jamezrin.alexaskills.crtmcards.AppConsts.SKILL_CARD_TITLE;
 
-public class HelloWorldIntentHandler implements RequestHandler {
-
+public class ExpirationDateIntentHandler implements RequestHandler {
     @Override
     public boolean canHandle(HandlerInput input) {
-        return input.matches(intentName("HelloWorldIntent"));
+        return input.matches(intentName("ExpirationDateIntent"));
     }
 
     @Override
     public Optional<Response> handle(HandlerInput input) {
-        String speechText = "Hello world";
-        return input.getResponseBuilder()
-                .withSpeech(speechText)
-                .withSimpleCard("HelloWorld", speechText)
-                .build();
-    }
+        ResponseBuilder builder = input.getResponseBuilder();
 
+        String cardInfo = (String) input.getAttributesManager().getPersistentAttributes().get("CARD_INFO");
+
+        if (cardInfo != null) {
+            String speech = "I have your data";
+            builder.withSpeech(speech);
+            builder.withReprompt(speech);
+            builder.withSimpleCard(SKILL_CARD_TITLE, speech);
+        } else {
+            String speech = "I don't have your data";
+            builder.withSpeech(speech);
+            builder.withReprompt(speech);
+            builder.withSimpleCard(SKILL_CARD_TITLE, speech);
+        }
+
+        return builder.build();
+    }
 }
