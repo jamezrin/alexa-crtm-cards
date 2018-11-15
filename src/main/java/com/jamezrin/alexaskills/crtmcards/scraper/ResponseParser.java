@@ -136,8 +136,8 @@ public class ResponseParser {
                 CardType.fromId(resultsEls.get(1).text()),
 
                 new CardRenewal[]{
-                        extractRenewal(resultsEls.subList(2, 6)),
-                        extractRenewal(resultsEls.subList(6, 10))
+                        resultsEls.size() > 2 ? extractRenewal(resultsEls.subList(2, 6)) : null,
+                        resultsEls.size() > 6 ? extractRenewal(resultsEls.subList(6, 10)) : null
                 },
 
                 extractSimpleDate(expirationEl.text()),
