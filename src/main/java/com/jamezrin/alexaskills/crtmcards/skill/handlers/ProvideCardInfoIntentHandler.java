@@ -42,6 +42,9 @@ public class ProvideCardInfoIntentHandler implements RequestHandler {
 
 
 
+        // input.getRequestEnvelope().getSession().getUser().getUserId()
+
+
         return builder.build();
     }
 }
