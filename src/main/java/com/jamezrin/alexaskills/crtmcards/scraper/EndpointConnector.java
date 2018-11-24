@@ -6,19 +6,15 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.message.BasicNameValuePair;
-import org.jsoup.helper.Validate;
 
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.jamezrin.alexaskills.crtmcards.AppConsts.CRTM_QUERY_URI;
-import static com.jamezrin.alexaskills.crtmcards.scraper.ScraperUtils.makeDefaultViewState;
-import static com.jamezrin.alexaskills.crtmcards.scraper.ScraperUtils.makeHttpClient;
 
 public class EndpointConnector {
-    private static final HttpClient httpClient = makeHttpClient(20000);
-
     private final String viewState;
     private final String cardPrefix;
     private final String cardNumber;
@@ -29,14 +25,6 @@ public class EndpointConnector {
         this.cardNumber = cardNumber;
     }
 
-    public EndpointConnector(String cardPrefix, String cardNumber) {
-        this(
-                makeDefaultViewState(),
-                cardPrefix,
-                cardNumber
-        );
-    }
-
     public HttpPost makeRequest()  {
         return buildQueryRequest(
                 viewState,
@@ -45,7 +33,7 @@ public class EndpointConnector {
         );
     }
 
-    public HttpResponse connect() throws Exception {
+    public HttpResponse connect(HttpClient httpClient) throws IOException {
         HttpPost queryRequest = makeRequest();
         return httpClient.execute(queryRequest);
     }

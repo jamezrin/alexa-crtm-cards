@@ -53,8 +53,10 @@ public class ResponseParser {
     }
 
     public Card parse() throws ScraperException {
+        // Runs all checks and throws exceptions accordingly
         checkForErrors(document);
 
+        // Extracts properties and creates Card
         return processCard(document);
     }
 
@@ -86,7 +88,7 @@ public class ResponseParser {
             String content = element.text();
             if (!content.isEmpty()) {
                 switch (content) {
-                    case "POR FAVOR, INTRODUZCA DE NUEVO SU TARJETA": // get these strings in the exceptions
+                    case "POR FAVOR, INTRODUZCA DE NUEVO SU TARJETA": // get these strings in the exceptions or map
                         throw new NotExistentCardNumberException(content);
                     case "TARJETA NO ACTIVA":
                         throw new InactiveCardNumberException(content);

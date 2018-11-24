@@ -8,6 +8,7 @@ import com.amazon.ask.attributes.persistence.impl.DynamoDbPersistenceAdapter;
 import com.amazonaws.auth.AWSCredentialsProvider;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.services.dynamodbv2.*;
+import com.amazonaws.services.dynamodbv2.xspec.S;
 import com.jamezrin.alexaskills.crtmcards.scraper.ScraperUtils;
 import com.jamezrin.alexaskills.crtmcards.skill.handlers.ExpirationDateIntentHandler;
 import com.jamezrin.alexaskills.crtmcards.skill.handlers.OverviewSkillIntentHandler;
@@ -17,8 +18,10 @@ import com.jamezrin.alexaskills.crtmcards.skill.handlers.defaults.CancelAndStopI
 import com.jamezrin.alexaskills.crtmcards.skill.handlers.defaults.HelpIntentHandler;
 import com.jamezrin.alexaskills.crtmcards.skill.handlers.LaunchRequestHandler;
 import com.jamezrin.alexaskills.crtmcards.skill.handlers.defaults.SessionEndedRequestHandler;
+import org.apache.http.impl.client.CloseableHttpClient;
 
 import static com.jamezrin.alexaskills.crtmcards.AppConsts.SKILL_ID;
+import static com.jamezrin.alexaskills.crtmcards.scraper.ScraperUtils.makeHttpClient;
 
 // com.jamezrin.alexaskills.crtmcards.skill.MainSkillStreamHandler
 
@@ -34,8 +37,9 @@ public class MainSkillStreamHandler extends SkillStreamHandler {
                         new HelpIntentHandler(),
                         new LaunchRequestHandler(),
                         new SessionEndedRequestHandler())
+                //.withHttpClient(makeHttpClient(20000))
                 .withAutoCreateTable(true)
-                .withTableName("cards")
+                .withTableName("crtmcards")
                 .withSkillId(SKILL_ID)
                 .build();
     }

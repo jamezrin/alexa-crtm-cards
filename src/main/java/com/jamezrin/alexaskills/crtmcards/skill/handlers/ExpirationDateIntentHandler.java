@@ -34,21 +34,7 @@ public class ExpirationDateIntentHandler implements RequestHandler {
     @Override
     public Optional<Response> handle(HandlerInput input) {
         ResponseBuilder builder = input.getResponseBuilder();
-
-        String cardInfo = (String) input.getAttributesManager().getPersistentAttributes().get("CARD_INFO");
-
-        if (cardInfo != null) {
-            String speech = "I have your data";
-            builder.withSpeech(speech);
-            builder.withReprompt(speech);
-            builder.withSimpleCard(SKILL_CARD_TITLE, speech);
-        } else {
-            String speech = "I don't have your data";
-            builder.withSpeech(speech);
-            builder.withReprompt(speech);
-            builder.withSimpleCard(SKILL_CARD_TITLE, speech);
-        }
-
+        builder.withSpeech("Está funcionando, bien!");
         return builder.build();
     }
 }

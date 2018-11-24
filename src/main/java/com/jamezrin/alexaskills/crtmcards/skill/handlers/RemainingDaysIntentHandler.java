@@ -32,10 +32,7 @@ public class RemainingDaysIntentHandler implements RequestHandler {
     @Override
     public Optional<Response> handle(HandlerInput input) {
         ResponseBuilder builder = input.getResponseBuilder();
-
-        builder.withSpeech("Hola, funciona");
-        builder.withSimpleCard("NONO", "sadasdasdsaw");
-
+        builder.withSpeech("Está funcionando, bien!");
         return builder.build();
     }
 }

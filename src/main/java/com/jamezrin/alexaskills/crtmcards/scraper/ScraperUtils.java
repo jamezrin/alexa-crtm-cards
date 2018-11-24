@@ -7,6 +7,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.conn.ssl.NoopHostnameVerifier;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -20,9 +21,9 @@ import static com.jamezrin.alexaskills.crtmcards.AppConsts.CRTM_QUERY_URI;
 import static com.jamezrin.alexaskills.crtmcards.AppConsts.CRTM_USER_AGENT;
 
 public class ScraperUtils {
-    private static final HttpClient httpClient = makeHttpClient(5000);
+    private static final CloseableHttpClient httpClient = makeHttpClient(5000);
 
-    public static HttpClient makeHttpClient(int timeout) {
+    public static CloseableHttpClient makeHttpClient(int timeout) {
         RequestConfig requestConfig = RequestConfig.custom()
                 .setConnectTimeout(timeout)
                 .setSocketTimeout(timeout)
@@ -33,14 +34,6 @@ public class ScraperUtils {
                 .setSSLHostnameVerifier(NoopHostnameVerifier.INSTANCE)
                 .setUserAgent(CRTM_USER_AGENT)
                 .build();
-    }
-
-    public static String makeDefaultViewState() {
-        return
-            "/wEPDwUJNzkyNzg1MDMyD2QWAmYPZBYCAgMPZBYEAgMPDxYCHgRUZXh0BSBTw6FiYWRvLCAxMCBkZSBub3ZpZW1icm" +
-            "UgZGUgMjAxOGRkAgUPZBYGAgEPDxYCHwAFCjEwLzExLzIwMThkZAIDDw8WAh8ABQUxNDozMWRkAgUPZBYCAgMPZBYC" +
-            "Zg9kFgICAQ8QZA8WBmYCAQICAgMCBAIFFgYQBQMtLS0FAy0tLWcQBQMwMDEFAzAwMWcQBQMwMDIFAzAwMmcQBQMwMD" +
-            "MFAzAwM2cQBQMxNzUFAzE3NWcQBQMyNTEFAzI1MWdkZGQBRJ/qa2v0OAMMeRdkpd2XFiCltKiJjyXS6doF/w0EQg==";
     }
 
     public static String fetchViewState() throws IOException {
