@@ -15,13 +15,12 @@ package com.jamezrin.alexaskills.crtmcards.skill.handlers;
 
 import com.amazon.ask.dispatcher.request.handler.HandlerInput;
 import com.amazon.ask.dispatcher.request.handler.RequestHandler;
-import com.amazon.ask.model.Intent;
-import com.amazon.ask.model.IntentRequest;
-import com.amazon.ask.model.Request;
-import com.amazon.ask.model.Response;
+import com.amazon.ask.model.*;
 import com.amazon.ask.response.ResponseBuilder;
 import com.jamezrin.alexaskills.crtmcards.skill.CardInfo;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 import static com.amazon.ask.request.Predicates.intentName;
@@ -38,12 +37,22 @@ public class ProvideCardInfoIntentHandler implements RequestHandler {
         Request request = input.getRequestEnvelope().getRequest();
         IntentRequest intentRequest = (IntentRequest) request;
         Intent intent = intentRequest.getIntent();
+        Map<String, Slot> slots = intent.getSlots();
+
+        Slot prefix = slots.get("prefix");
+        Slot number = slots.get("number");
+
+        Map<String, Object> attributes = input.getAttributesManager().getPersistentAttributes();
+
+        attributes.put("prefix", prefix.getValue());
+        attributes.put("number", number.getValue());
+
+        input.getAttributesManager().setPersistentAttributes(attributes);
+        input.getAttributesManager().savePersistentAttributes();
+
         ResponseBuilder builder = input.getResponseBuilder();
-
-
-
         // input.getRequestEnvelope().getSession().getUser().getUserId()
-
+        builder.withSpeech("Comprueba la base de datos");
 
         return builder.build();
     }

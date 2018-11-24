@@ -68,3 +68,4 @@ Ahora bien, dime los 3 últimos numeros de la primera linea
 <AMAZON.Numeric:10>
 ¡Perfecto! Todo listo.
 
+Por favor, indícame los tres ultimos digitos de la primera linea
