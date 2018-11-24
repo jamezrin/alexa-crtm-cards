@@ -59,6 +59,7 @@ public class ExpirationDateIntentHandler implements RequestHandler {
         String prefix = (String) attributes.get("ttp_prefix");
         if (prefix == null) {
             builder.withSpeech("Dame tu prefijo");
+            builder.withShouldEndSession(false);
             builder.addElicitSlotDirective("prefix", intent);
             return builder.build();
         }
@@ -66,6 +67,7 @@ public class ExpirationDateIntentHandler implements RequestHandler {
         String number = (String) attributes.get("ttp_number");
         if (number == null) {
             builder.withSpeech("Dame tu numero");
+            builder.withShouldEndSession(false);
             builder.addElicitSlotDirective("number", intent);
             return builder.build();
         }
