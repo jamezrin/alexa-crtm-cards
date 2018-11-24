@@ -38,8 +38,7 @@ public class MainSkillStreamHandler extends SkillStreamHandler {
                         new LaunchRequestHandler(),
                         new SessionEndedRequestHandler())
                 //.withHttpClient(makeHttpClient(20000))
-                .withAutoCreateTable(true)
-                .withTableName("crtmcards")
+                .withTableName("crtm-cards")
                 .withSkillId(SKILL_ID)
                 .build();
     }
