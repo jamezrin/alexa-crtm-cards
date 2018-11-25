@@ -13,6 +13,7 @@ import com.jamezrin.alexaskills.crtmcards.skill.handlers.LaunchRequestHandler;
 import com.jamezrin.alexaskills.crtmcards.skill.handlers.defaults.SessionEndedRequestHandler;
 
 import static com.jamezrin.alexaskills.crtmcards.AppConsts.SKILL_ID;
+import static com.jamezrin.alexaskills.crtmcards.scraper.ScraperUtils.makeHttpClient;
 
 // com.jamezrin.alexaskills.crtmcards.skill.MainSkillStreamHandler
 

@@ -18,11 +18,26 @@ import com.amazon.ask.dispatcher.request.handler.HandlerInput;
 import com.amazon.ask.dispatcher.request.handler.RequestHandler;
 import com.amazon.ask.model.*;
 import com.amazon.ask.response.ResponseBuilder;
+import com.jamezrin.alexaskills.crtmcards.scraper.EndpointConnector;
+import com.jamezrin.alexaskills.crtmcards.scraper.ResponseParser;
+import com.jamezrin.alexaskills.crtmcards.scraper.exceptions.ScraperException;
+import com.jamezrin.alexaskills.crtmcards.scraper.types.Card;
+import com.jamezrin.alexaskills.crtmcards.scraper.types.CardRenewal;
+import org.apache.http.HttpResponse;
 
+import java.io.IOException;
+import java.time.LocalDate;
+import java.time.chrono.ChronoLocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
+import java.time.temporal.TemporalAccessor;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 
 import static com.amazon.ask.request.Predicates.intentName;
+import static com.jamezrin.alexaskills.crtmcards.AppConsts.VIEW_STATE;
+import static com.jamezrin.alexaskills.crtmcards.scraper.ScraperUtils.makeHttpClient;
 
 public class ExpirationDateIntentHandler implements RequestHandler {
     @Override
@@ -42,37 +57,100 @@ public class ExpirationDateIntentHandler implements RequestHandler {
         Map<String, Slot> slots = intent.getSlots();
 
         Slot prefixSlot = slots.get("prefix");
-        if (prefixSlot.getValue() != null) {
-            attributes.put("ttp_prefix", prefixSlot.getValue());
-        }
-
+        String prefixSlotValue = prefixSlot.getValue();
         Slot numberSlot = slots.get("number");
-        if (numberSlot.getValue() != null) {
-            attributes.put("ttp_number", numberSlot.getValue());
+        String numberSlotValue = numberSlot.getValue();
+
+        if (prefixSlotValue != null) {
+            if (prefixSlotValue.length() == 3) {
+                attributes.put("ttp_prefix", prefixSlotValue);
+            } else {
+                builder.withSpeech("No parece correcto. Necesito los tres últimos dígitos de la primera linea");
+                builder.withShouldEndSession(false);
+                builder.addElicitSlotDirective("prefix", intent);
+                return builder.build();
+            }
         }
 
-        if (prefixSlot.getValue() != null || numberSlot.getValue() != null) {
+        if (numberSlotValue != null) {
+            if (numberSlotValue.length() == 10) {
+                attributes.put("ttp_number", numberSlotValue);
+            } else {
+                builder.withSpeech("No parece correcto. Necesito los diez dígitos de la segunda linea");
+                builder.withShouldEndSession(false);
+                builder.addElicitSlotDirective("prefix", intent);
+                return builder.build();
+            }
+        }
+
+        if (prefixSlotValue != null || numberSlotValue != null) {
             attributesManager.setPersistentAttributes(attributes);
             attributesManager.savePersistentAttributes();
         }
 
-        String prefix = (String) attributes.get("ttp_prefix");
-        if (prefix == null) {
-            builder.withSpeech("Dame tu prefijo");
+        String ttpPrefix = (String) attributes.get("ttp_prefix");
+        String ttpNumber = (String) attributes.get("ttp_number");
+
+        StringBuilder speech = new StringBuilder();
+        if (ttpPrefix == null && ttpNumber == null) {
+            speech.append("Antes de poder ayudarte necesito que me des unos números de tu tarjeta. ");
+            speech.append("Los puedes encontrar al lado de tu foto en tu tarjeta de transportes. ");
+        }
+
+        if (ttpPrefix == null) {
+            speech.append("Dame los tres últimos dígitos de la primera linea");
+            builder.withSpeech(speech.toString());
             builder.withShouldEndSession(false);
             builder.addElicitSlotDirective("prefix", intent);
             return builder.build();
         }
 
-        String number = (String) attributes.get("ttp_number");
-        if (number == null) {
-            builder.withSpeech("Dame tu numero");
+        if (ttpNumber == null) {
+            speech.append("Dame los diez dígitos de la segunda linea");
+            builder.withSpeech(speech.toString());
             builder.withShouldEndSession(false);
             builder.addElicitSlotDirective("number", intent);
             return builder.build();
         }
 
-        builder.withSpeech("Tu prefijo es " + prefix + " y tu numero es " + number);
+        EndpointConnector endpointConnector = new EndpointConnector(
+                VIEW_STATE,
+                ttpPrefix,
+                ttpNumber
+        );
+
+        try {
+            HttpResponse response = endpointConnector.connect(makeHttpClient(20000));
+            ResponseParser responseParser = new ResponseParser(response);
+            Card card = responseParser.parse();
+            CardRenewal lastRenewal = card.getRenewals() [card.getRenewals().length - 1];
+            if (lastRenewal != null) {
+                LocalDate expDate = lastRenewal.getExpirationDate();
+                if (expDate != null && expDate.isAfter(LocalDate.now())) { // no ha caducado
+                    // https://docs.oracle.com/javase/8/docs/api/java/time/format/DateTimeFormatter.html
+                    String expDateStr = expDate.format(DateTimeFormatter.ofPattern(
+                            "EEEE dd 'de' MMMM",
+                            Locale.forLanguageTag("es-ES")
+                    ));
+
+                    builder.withSpeech("Tu tarjeta caduca el " + expDateStr);
+                } else {
+                    builder.withSpeech("Tu tarjet ya ha caducado");
+                }
+
+                return builder.build();
+            }
+        } catch (IOException e) {
+            speech.append("No se ha podido contactar con el servidor. Intentalo mas tarde");
+            builder.withSpeech(speech.toString());
+            return builder.build();
+        } catch (ScraperException e) {
+            speech.append("No se ha podido extraer la información. Intentalo mas tarde");
+            builder.withSpeech(speech.toString());
+            return builder.build();
+        }
+
+
         return builder.build();
     }
 }

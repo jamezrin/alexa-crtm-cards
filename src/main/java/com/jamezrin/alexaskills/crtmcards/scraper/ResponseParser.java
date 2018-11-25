@@ -45,7 +45,7 @@ public class ResponseParser {
         }
     }
 
-    public ResponseParser(HttpResponse response) throws Exception {
+    public ResponseParser(HttpResponse response) throws IOException, ScraperException {
         this(
                 response.getEntity().getContent(),
                 ContentType.getOrDefault(response.getEntity()).getCharset()
