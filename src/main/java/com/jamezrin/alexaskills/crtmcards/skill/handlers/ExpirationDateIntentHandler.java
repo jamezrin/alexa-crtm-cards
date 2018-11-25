@@ -18,12 +18,14 @@ import com.amazon.ask.dispatcher.request.handler.HandlerInput;
 import com.amazon.ask.dispatcher.request.handler.RequestHandler;
 import com.amazon.ask.model.*;
 import com.amazon.ask.response.ResponseBuilder;
+import com.jamezrin.alexaskills.crtmcards.AppUtils;
 import com.jamezrin.alexaskills.crtmcards.scraper.EndpointConnector;
 import com.jamezrin.alexaskills.crtmcards.scraper.ResponseParser;
 import com.jamezrin.alexaskills.crtmcards.scraper.exceptions.ScraperException;
 import com.jamezrin.alexaskills.crtmcards.scraper.types.Card;
 import com.jamezrin.alexaskills.crtmcards.scraper.types.CardRenewal;
 import org.apache.http.HttpResponse;
+import org.apache.http.impl.client.CloseableHttpClient;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -40,6 +42,8 @@ import static com.jamezrin.alexaskills.crtmcards.AppConsts.VIEW_STATE;
 import static com.jamezrin.alexaskills.crtmcards.scraper.ScraperUtils.makeHttpClient;
 
 public class ExpirationDateIntentHandler implements RequestHandler {
+    private static final CloseableHttpClient httpClient = makeHttpClient(20000);
+
     @Override
     public boolean canHandle(HandlerInput input) {
         return input.matches(intentName("ExpirationDateIntent"));
@@ -93,8 +97,8 @@ public class ExpirationDateIntentHandler implements RequestHandler {
 
         StringBuilder speech = new StringBuilder();
         if (ttpPrefix == null && ttpNumber == null) {
-            speech.append("Antes de poder ayudarte necesito que me des unos números de tu tarjeta. ");
-            speech.append("Los puedes encontrar al lado de tu foto en tu tarjeta de transportes. ");
+            speech.append("<p>Antes de poder ayudarte necesito que me des unos números de tu tarjeta. ");
+            speech.append("Los puedes encontrar al lado de tu foto en tu tarjeta de transportes. </p>");
         }
 
         if (ttpPrefix == null) {
@@ -120,20 +124,14 @@ public class ExpirationDateIntentHandler implements RequestHandler {
         );
 
         try {
-            HttpResponse response = endpointConnector.connect(makeHttpClient(20000));
+            HttpResponse response = endpointConnector.connect(httpClient);
             ResponseParser responseParser = new ResponseParser(response);
             Card card = responseParser.parse();
             CardRenewal lastRenewal = card.getRenewals() [card.getRenewals().length - 1];
             if (lastRenewal != null) {
                 LocalDate expDate = lastRenewal.getExpirationDate();
                 if (expDate != null && expDate.isAfter(LocalDate.now())) { // no ha caducado
-                    // https://docs.oracle.com/javase/8/docs/api/java/time/format/DateTimeFormatter.html
-                    String expDateStr = expDate.format(DateTimeFormatter.ofPattern(
-                            "EEEE dd 'de' MMMM",
-                            Locale.forLanguageTag("es-ES")
-                    ));
-
-                    builder.withSpeech("Tu tarjeta caduca el " + expDateStr);
+                    builder.withSpeech("Tu tarjeta caduca el " + AppUtils.formatSpeechDate(expDate));
                 } else {
                     builder.withSpeech("Tu tarjet ya ha caducado");
                 }

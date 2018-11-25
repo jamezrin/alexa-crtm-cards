@@ -1,3 +1,4 @@
+import com.jamezrin.alexaskills.crtmcards.AppUtils;
 import com.jamezrin.alexaskills.crtmcards.scraper.ResponseParser;
 import org.junit.jupiter.api.Test;
 
@@ -44,5 +45,12 @@ public class TestDateParsing {
         String string = "Caduca: 2010/10/10";
         LocalDate date = ResponseParser.extractSimpleDate(string);
         assertNull(date);
+    }
+
+    @Test
+    public void testCreateSpeechDate() {
+        LocalDate date = LocalDate.of(2018, 11, 24);
+        String formatted = AppUtils.formatSpeechDate(date);
+        assertEquals("sábado 24 de noviembre", formatted);
     }
 }

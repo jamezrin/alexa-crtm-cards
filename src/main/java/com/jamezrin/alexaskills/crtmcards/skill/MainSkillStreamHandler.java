@@ -11,6 +11,7 @@ import com.jamezrin.alexaskills.crtmcards.skill.handlers.defaults.CancelAndStopI
 import com.jamezrin.alexaskills.crtmcards.skill.handlers.defaults.HelpIntentHandler;
 import com.jamezrin.alexaskills.crtmcards.skill.handlers.LaunchRequestHandler;
 import com.jamezrin.alexaskills.crtmcards.skill.handlers.defaults.SessionEndedRequestHandler;
+import org.apache.http.impl.client.CloseableHttpClient;
 
 import static com.jamezrin.alexaskills.crtmcards.AppConsts.SKILL_ID;
 import static com.jamezrin.alexaskills.crtmcards.scraper.ScraperUtils.makeHttpClient;
@@ -29,7 +30,6 @@ public class MainSkillStreamHandler extends SkillStreamHandler {
                         new HelpIntentHandler(),
                         new LaunchRequestHandler(),
                         new SessionEndedRequestHandler())
-                //.withHttpClient(makeHttpClient(20000))
                 .withTableName("crtm-cards")
                 .withSkillId(SKILL_ID)
                 .build();

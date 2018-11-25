@@ -76,3 +76,7 @@ Antes de poder ayudarte necesito que me des unos números de tu tarjeta.
 
 Los puedes encontrar al lado de tu foto en tu tarjeta de transportes.
 
+
+
+
+def 512m 15s
