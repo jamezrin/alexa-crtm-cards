@@ -9,3 +9,6 @@
 - [ ] Create reminder handler for expiration date
 - [ ] Create intent to say when to recharge the card (expDate + 1)
 - [ ] Create name-free invocation handler, whenever it is available
+- [ ] (crtm-cards-java): Validate card numbers
+- [ ] (crtm-cards-java): Make timeout constant 
+- [ ] (crtm-cards-java): Make method to get last renewal
