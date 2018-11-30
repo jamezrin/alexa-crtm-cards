@@ -1,4 +1,4 @@
-package com.jamezrin.alexaskills.crtmcards;
+package com.github.jamezrin.alexacrtmcards;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;

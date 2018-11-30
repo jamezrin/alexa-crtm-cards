@@ -11,16 +11,13 @@
      the specific language governing permissions and limitations under the License.
 */
 
-package com.jamezrin.alexaskills.crtmcards.skill.handlers;
+package com.github.jamezrin.alexacrtmcards.handlers;
 
 import com.amazon.ask.dispatcher.request.handler.HandlerInput;
 import com.amazon.ask.dispatcher.request.handler.RequestHandler;
 import com.amazon.ask.model.*;
 import com.amazon.ask.response.ResponseBuilder;
-import com.jamezrin.alexaskills.crtmcards.skill.CardInfo;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
 import static com.amazon.ask.request.Predicates.intentName;
@@ -34,7 +31,9 @@ public class ProvideCardDetailsIntentHandler implements RequestHandler {
 
     @Override
     public Optional<Response> handle(HandlerInput input) {
+        /*
         Request request = input.getRequestEnvelope().getRequest();
+
         IntentRequest intentRequest = (IntentRequest) request;
         Intent intent = intentRequest.getIntent();
         Map<String, Slot> slots = intent.getSlots();
@@ -49,6 +48,7 @@ public class ProvideCardDetailsIntentHandler implements RequestHandler {
 
         input.getAttributesManager().setPersistentAttributes(attributes);
         input.getAttributesManager().savePersistentAttributes();
+        */
 
         ResponseBuilder builder = input.getResponseBuilder();
         // input.getRequestEnvelope().getSession().getUser().getUserId()

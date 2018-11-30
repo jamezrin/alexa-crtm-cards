@@ -11,38 +11,35 @@
      the specific language governing permissions and limitations under the License.
 */
 
-package com.jamezrin.alexaskills.crtmcards.skill.handlers;
+package com.github.jamezrin.alexacrtmcards.handlers;
 
 import com.amazon.ask.attributes.AttributesManager;
 import com.amazon.ask.dispatcher.request.handler.HandlerInput;
 import com.amazon.ask.dispatcher.request.handler.RequestHandler;
 import com.amazon.ask.model.*;
 import com.amazon.ask.response.ResponseBuilder;
-import com.jamezrin.alexaskills.crtmcards.AppUtils;
-import com.jamezrin.alexaskills.crtmcards.scraper.EndpointConnector;
-import com.jamezrin.alexaskills.crtmcards.scraper.ResponseParser;
-import com.jamezrin.alexaskills.crtmcards.scraper.exceptions.ScraperException;
-import com.jamezrin.alexaskills.crtmcards.scraper.types.Card;
-import com.jamezrin.alexaskills.crtmcards.scraper.types.CardRenewal;
+import com.github.jamezrin.alexacrtmcards.AppUtils;
+import com.github.jamezrin.crtmcards.EndpointClient;
+import com.github.jamezrin.crtmcards.ResponseParser;
+import com.github.jamezrin.crtmcards.exceptions.ScraperException;
+import com.github.jamezrin.crtmcards.exceptions.UnsuccessfulRequestException;
+import com.github.jamezrin.crtmcards.types.Card;
+import com.github.jamezrin.crtmcards.types.CardRenewal;
 import org.apache.http.HttpResponse;
-import org.apache.http.impl.client.CloseableHttpClient;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.time.chrono.ChronoLocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.format.FormatStyle;
-import java.time.temporal.TemporalAccessor;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 
 import static com.amazon.ask.request.Predicates.intentName;
-import static com.jamezrin.alexaskills.crtmcards.AppConsts.VIEW_STATE;
-import static com.jamezrin.alexaskills.crtmcards.scraper.ScraperUtils.makeHttpClient;
 
 public class ExpirationDateIntentHandler implements RequestHandler {
-    private static final CloseableHttpClient httpClient = makeHttpClient(20000);
+    private final EndpointClient client;
+
+    public ExpirationDateIntentHandler(EndpointClient client) {
+        this.client = client;
+    }
 
     @Override
     public boolean canHandle(HandlerInput input) {
@@ -69,7 +66,10 @@ public class ExpirationDateIntentHandler implements RequestHandler {
             if (prefixSlotValue.length() == 3) {
                 attributes.put("ttp_prefix", prefixSlotValue);
             } else {
-                builder.withSpeech("No parece correcto. Necesito los tres últimos dígitos de la primera linea");
+                String speechErr = "No parece correcto. Necesito los tres últimos dígitos de la primera linea";
+                builder.withSpeech(speechErr);
+                builder.withReprompt(speechErr);
+                builder.withSimpleCard("Incorrecto", speechErr);
                 builder.withShouldEndSession(false);
                 builder.addElicitSlotDirective("prefix", intent);
                 return builder.build();
@@ -80,7 +80,10 @@ public class ExpirationDateIntentHandler implements RequestHandler {
             if (numberSlotValue.length() == 10) {
                 attributes.put("ttp_number", numberSlotValue);
             } else {
-                builder.withSpeech("No parece correcto. Necesito los diez dígitos de la segunda linea");
+                String speechErr2 = "No parece correcto. Necesito los diez dígitos de la segunda linea";
+                builder.withSpeech(speechErr2);
+                builder.withReprompt(speechErr2);
+                builder.withSimpleCard("Incorrecto", speechErr2);
                 builder.withShouldEndSession(false);
                 builder.addElicitSlotDirective("prefix", intent);
                 return builder.build();
@@ -104,6 +107,8 @@ public class ExpirationDateIntentHandler implements RequestHandler {
         if (ttpPrefix == null) {
             speech.append("Dame los tres últimos dígitos de la primera linea");
             builder.withSpeech(speech.toString());
+            builder.withReprompt(speech.toString());
+            builder.withSimpleCard("Datos", speech.toString());
             builder.withShouldEndSession(false);
             builder.addElicitSlotDirective("prefix", intent);
             return builder.build();
@@ -112,39 +117,45 @@ public class ExpirationDateIntentHandler implements RequestHandler {
         if (ttpNumber == null) {
             speech.append("Dame los diez dígitos de la segunda linea");
             builder.withSpeech(speech.toString());
+            builder.withReprompt(speech.toString());
+            builder.withSimpleCard("Datos", speech.toString());
             builder.withShouldEndSession(false);
             builder.addElicitSlotDirective("number", intent);
             return builder.build();
         }
 
-        EndpointConnector endpointConnector = new EndpointConnector(
-                VIEW_STATE,
-                ttpPrefix,
-                ttpNumber
-        );
-
         try {
-            HttpResponse response = endpointConnector.connect(httpClient);
+            HttpResponse response = client.connect(ttpPrefix, ttpNumber);
             ResponseParser responseParser = new ResponseParser(response);
             Card card = responseParser.parse();
             CardRenewal lastRenewal = card.getRenewals() [card.getRenewals().length - 1];
             if (lastRenewal != null) {
                 LocalDate expDate = lastRenewal.getExpirationDate();
                 if (expDate != null && expDate.isAfter(LocalDate.now())) { // no ha caducado
-                    builder.withSpeech("Tu tarjeta caduca el " + AppUtils.formatSpeechDate(expDate));
+                    String speechExpDate = "Tu tarjeta caduca el dia " + AppUtils.formatSpeechDate(expDate);
+                    builder.withSpeech(speechExpDate);
+                    builder.withReprompt(speechExpDate);
+                    builder.withSimpleCard("Tarjeta", speechExpDate);
                 } else {
-                    builder.withSpeech("Tu tarjet ya ha caducado");
+                    String speechExp = "Tu tarjeta ya ha caducado";
+                    builder.withSpeech(speechExp);
+                    builder.withReprompt(speechExp);
+                    builder.withSimpleCard("Expirada", speechExp);
                 }
 
                 return builder.build();
             }
-        } catch (IOException e) {
+        } catch (IOException | UnsuccessfulRequestException e) {
             speech.append("No se ha podido contactar con el servidor. Intentalo mas tarde");
             builder.withSpeech(speech.toString());
+            builder.withReprompt(speech.toString());
+            builder.withSimpleCard("Error", speech.toString());
             return builder.build();
         } catch (ScraperException e) {
             speech.append("No se ha podido extraer la información. Intentalo mas tarde");
             builder.withSpeech(speech.toString());
+            builder.withReprompt(speech.toString());
+            builder.withSimpleCard("Error", speech.toString());
             return builder.build();
         }
 

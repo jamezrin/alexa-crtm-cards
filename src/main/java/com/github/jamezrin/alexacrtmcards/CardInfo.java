@@ -1,4 +1,4 @@
-package com.jamezrin.alexaskills.crtmcards.skill;
+package com.github.jamezrin.alexacrtmcards;
 
 public class CardInfo {
     private final String cardPrefix;

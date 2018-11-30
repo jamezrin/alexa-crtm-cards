@@ -11,23 +11,23 @@
      the specific language governing permissions and limitations under the License.
 */
 
-package com.jamezrin.alexaskills.crtmcards.skill.handlers;
+package com.github.jamezrin.alexacrtmcards.handlers;
 
 import com.amazon.ask.dispatcher.request.handler.HandlerInput;
 import com.amazon.ask.dispatcher.request.handler.RequestHandler;
+import com.amazon.ask.model.LaunchRequest;
 import com.amazon.ask.model.Response;
 import com.amazon.ask.response.ResponseBuilder;
-import com.jamezrin.alexaskills.crtmcards.skill.CardInfo;
 
 import java.util.Optional;
 
-import static com.amazon.ask.request.Predicates.intentName;
-import static com.jamezrin.alexaskills.crtmcards.AppConsts.SKILL_CARD_TITLE;
+import static com.amazon.ask.request.Predicates.requestType;
 
-public class OverviewSkillIntentHandler implements RequestHandler {
+public class LaunchRequestHandler implements RequestHandler {
+
     @Override
     public boolean canHandle(HandlerInput input) {
-        return input.matches(intentName("OverviewSkillIntent"));
+        return input.matches(requestType(LaunchRequest.class));
     }
 
     @Override
@@ -36,4 +36,5 @@ public class OverviewSkillIntentHandler implements RequestHandler {
         builder.withSpeech("Está funcionando, bien!");
         return builder.build();
     }
+
 }
