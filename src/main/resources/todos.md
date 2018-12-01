@@ -12,3 +12,4 @@
 - [ ] (crtm-cards-java): Validate card numbers
 - [ ] (crtm-cards-java): Make timeout constant 
 - [ ] (crtm-cards-java): Make method to get last renewal
+- [ ] (crtm-cards-java): Validate certificate is from crtm itself

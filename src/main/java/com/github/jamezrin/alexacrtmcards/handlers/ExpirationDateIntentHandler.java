@@ -35,10 +35,10 @@ import java.util.Optional;
 import static com.amazon.ask.request.Predicates.intentName;
 
 public class ExpirationDateIntentHandler implements RequestHandler {
-    private final EndpointClient client;
+    private final EndpointClient endpointClient;
 
-    public ExpirationDateIntentHandler(EndpointClient client) {
-        this.client = client;
+    public ExpirationDateIntentHandler(EndpointClient endpointClient) {
+        this.endpointClient = endpointClient;
     }
 
     @Override
@@ -125,7 +125,7 @@ public class ExpirationDateIntentHandler implements RequestHandler {
         }
 
         try {
-            HttpResponse response = client.connect(ttpPrefix, ttpNumber);
+            HttpResponse response = endpointClient.connect(ttpPrefix, ttpNumber);
             ResponseParser responseParser = new ResponseParser(response);
             Card card = responseParser.parse();
             CardRenewal lastRenewal = card.getRenewals() [card.getRenewals().length - 1];
@@ -158,7 +158,6 @@ public class ExpirationDateIntentHandler implements RequestHandler {
             builder.withSimpleCard("Error", speech.toString());
             return builder.build();
         }
-
 
         return builder.build();
     }

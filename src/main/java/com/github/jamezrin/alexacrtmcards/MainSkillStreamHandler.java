@@ -15,7 +15,7 @@ public class MainSkillStreamHandler extends SkillStreamHandler {
     public static final String SKILL_ID = "amzn1.ask.skill.def1ad6d-f8e8-49f0-8d9f-6558599af1eb";
 
     private static Skill getSkill() {
-        EndpointClient client = new EndpointClient();
+        EndpointClient endpointClient = new EndpointClient();
 
         return Skills.standard()
                 .addRequestHandlers(
@@ -23,7 +23,7 @@ public class MainSkillStreamHandler extends SkillStreamHandler {
                         new OverviewSkillIntentHandler(),
                         new ProvideCardDetailsIntentHandler(),
                         new RemainingDaysIntentHandler(),
-                        new ExpirationDateIntentHandler(client),
+                        new ExpirationDateIntentHandler(endpointClient),
                         new HelpIntentHandler(),
                         new LaunchRequestHandler(),
                         new SessionEndedRequestHandler())
