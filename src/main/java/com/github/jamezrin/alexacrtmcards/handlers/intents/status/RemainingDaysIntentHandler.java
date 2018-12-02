@@ -13,17 +13,34 @@
 
 package com.github.jamezrin.alexacrtmcards.handlers.intents.status;
 
+import com.amazon.ask.attributes.AttributesManager;
 import com.amazon.ask.dispatcher.request.handler.HandlerInput;
 import com.amazon.ask.dispatcher.request.handler.RequestHandler;
 import com.amazon.ask.model.Response;
 import com.amazon.ask.response.ResponseBuilder;
 import com.github.jamezrin.alexacrtmcards.SkillUtils;
+import com.github.jamezrin.crtmcards.EndpointClient;
+import com.github.jamezrin.crtmcards.ResponseParser;
+import com.github.jamezrin.crtmcards.exceptions.ScraperException;
+import com.github.jamezrin.crtmcards.exceptions.UnsuccessfulRequestException;
+import com.github.jamezrin.crtmcards.types.Card;
+import com.github.jamezrin.crtmcards.types.CardRenewal;
+import org.apache.http.HttpResponse;
 
+import java.io.IOException;
+import java.time.LocalDate;
+import java.util.Map;
 import java.util.Optional;
 
 import static com.amazon.ask.request.Predicates.intentName;
 
 public class RemainingDaysIntentHandler implements RequestHandler {
+    private final EndpointClient endpointClient;
+
+    public RemainingDaysIntentHandler(EndpointClient endpointClient) {
+        this.endpointClient = endpointClient;
+    }
+
     @Override
     public boolean canHandle(HandlerInput input) {
         return input.matches(intentName("RemainingDaysIntent")
@@ -33,7 +50,62 @@ public class RemainingDaysIntentHandler implements RequestHandler {
     @Override
     public Optional<Response> handle(HandlerInput input) {
         ResponseBuilder builder = input.getResponseBuilder();
-        builder.withSpeech("Está funcionando, bien!");
+        AttributesManager attributesManager = input.getAttributesManager();
+        Map<String, Object> attributes = attributesManager.getPersistentAttributes();
+
+        String ttpPrefix = (String) attributes.get("ttp_prefix");
+        String ttpNumber = (String) attributes.get("ttp_number");
+
+        try {
+            HttpResponse response = endpointClient.connect(ttpPrefix, ttpNumber);
+            ResponseParser responseParser = new ResponseParser(response);
+            Card card = responseParser.parse();
+
+            try {
+                int renewalsLen = card.getRenewals().length;
+                CardRenewal lastRenewal = card.getRenewals() [renewalsLen - 1];
+
+                if (lastRenewal != null) {
+                    LocalDate expDate = lastRenewal.getExpirationDate();
+                    if (expDate != null) {
+                        if (expDate.isAfter(LocalDate.now())) {
+                            String speechDate = String.format("Tu tarjeta caducará dentro de %s dias",
+                                    LocalDate.now().until(expDate).getDays());
+                            builder.withSpeech(speechDate);
+                            builder.withReprompt(speechDate);
+                            builder.withSimpleCard("Tarjeta", speechDate);
+                        } else {
+                            String speechDate = String.format("Tu tarjeta caducó el dia %s",
+                                    SkillUtils.formatSpeechDate(expDate));
+                            builder.withSpeech(speechDate);
+                            builder.withReprompt(speechDate);
+                            builder.withSimpleCard("Caducada", speechDate);
+                        }
+                    } else {
+                        String speechExp = "Tu tarjeta ya ha caducado";
+                        builder.withSpeech(speechExp);
+                        builder.withReprompt(speechExp);
+                        builder.withSimpleCard("Caducada", speechExp);
+                    }
+                }
+            } catch (ArrayIndexOutOfBoundsException e) {
+                String speechText = "Esta tarjeta no se ha llegado a recargar nunca";
+                builder.withSpeech(speechText);
+                builder.withReprompt(speechText);
+                builder.withSimpleCard("Error", speechText);
+            }
+        } catch (IOException | UnsuccessfulRequestException e) {
+            String speechText = "No se ha podido contactar con el servidor. Inténtalo mas tarde";
+            builder.withSpeech(speechText);
+            builder.withReprompt(speechText);
+            builder.withSimpleCard("Error", speechText);
+        } catch (ScraperException e) {
+            String speechText = "No se ha podido extraer la información. Inténtalo mas tarde";
+            builder.withSpeech(speechText);
+            builder.withReprompt(speechText);
+            builder.withSimpleCard("Error", speechText);
+        }
+
         return builder.build();
     }
 }

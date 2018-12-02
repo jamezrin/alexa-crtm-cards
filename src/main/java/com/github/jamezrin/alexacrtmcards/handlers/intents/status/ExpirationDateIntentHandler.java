@@ -75,7 +75,7 @@ public class ExpirationDateIntentHandler implements RequestHandler {
                             builder.withReprompt(speechDate);
                             builder.withSimpleCard("Tarjeta", speechDate);
                         } else {
-                            String speechDate = String.format("Tu tarjeta caduca el dia %s",
+                            String speechDate = String.format("Tu tarjeta caducó el dia %s",
                                     SkillUtils.formatSpeechDate(expDate));
                             builder.withSpeech(speechDate);
                             builder.withReprompt(speechDate);
@@ -95,12 +95,12 @@ public class ExpirationDateIntentHandler implements RequestHandler {
                 builder.withSimpleCard("Error", speechText);
             }
         } catch (IOException | UnsuccessfulRequestException e) {
-            String speechText = "No se ha podido contactar con el servidor. Intentalo mas tarde";
+            String speechText = "No se ha podido contactar con el servidor. Inténtalo mas tarde";
             builder.withSpeech(speechText);
             builder.withReprompt(speechText);
             builder.withSimpleCard("Error", speechText);
         } catch (ScraperException e) {
-            String speechText = "No se ha podido extraer la información. Intentalo mas tarde";
+            String speechText = "No se ha podido extraer la información. Inténtalo mas tarde";
             builder.withSpeech(speechText);
             builder.withReprompt(speechText);
             builder.withSimpleCard("Error", speechText);

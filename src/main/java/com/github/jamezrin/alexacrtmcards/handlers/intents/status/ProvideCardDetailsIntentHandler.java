@@ -32,10 +32,12 @@ public class ProvideCardDetailsIntentHandler implements RequestHandler {
             AttributesManager attributesManager = input.getAttributesManager();
             Map<String, Object> attributes = attributesManager.getPersistentAttributes();
 
+            // Dame los tres ultimos digitos de la primera linea situados en la parte frontal de tu tarjeta, al lado de tu foto
             Slot prefixSlot = slots.get("prefix");
             String prefixSlotValue = prefixSlot.getValue();
             attributes.put("ttp_prefix", prefixSlotValue);
 
+            // Dame los diez digitos de la segunda linea situados en la parte frontal de tu tarjeta, al lado de tu foto
             Slot numberSlot = slots.get("number");
             String numberSlotValue = numberSlot.getValue();
             attributes.put("ttp_number", numberSlotValue);
