@@ -12,6 +12,6 @@
 - [ ] Create name-free invocation handler, whenever it is available
 - [ ] (crtm-cards-java): Validate card numbers
 - [ ] Validate card numbers, preferably using crtm-cards-java 
-- [ ] (crtm-cards-java): Make timeout constant
+- [x] (crtm-cards-java): Make timeout constant
 - [ ] (crtm-cards-java): Make method to get last renewal (maybe make list instead of array)
 - [x] (crtm-cards-java): Validate certificate is from crtm itself

@@ -17,7 +17,7 @@ import com.amazon.ask.dispatcher.request.handler.HandlerInput;
 import com.amazon.ask.dispatcher.request.handler.RequestHandler;
 import com.amazon.ask.model.Response;
 import com.amazon.ask.response.ResponseBuilder;
-import com.github.jamezrin.alexacrtmcards.SkillUtils;
+import com.github.jamezrin.alexacrtmcards.util.SkillUtils;
 
 import java.util.Optional;
 

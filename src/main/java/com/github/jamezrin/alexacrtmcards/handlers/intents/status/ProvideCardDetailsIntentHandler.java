@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import static com.amazon.ask.request.Predicates.intentName;
-import static com.github.jamezrin.alexacrtmcards.SkillUtils.hasProvidedCard;
+import static com.github.jamezrin.alexacrtmcards.util.SkillUtils.hasProvidedCard;
 
 public class ProvideCardDetailsIntentHandler implements RequestHandler {
     @Override

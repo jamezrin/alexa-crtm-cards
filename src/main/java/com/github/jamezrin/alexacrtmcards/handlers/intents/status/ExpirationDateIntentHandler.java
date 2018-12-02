@@ -18,7 +18,7 @@ import com.amazon.ask.dispatcher.request.handler.HandlerInput;
 import com.amazon.ask.dispatcher.request.handler.RequestHandler;
 import com.amazon.ask.model.Response;
 import com.amazon.ask.response.ResponseBuilder;
-import com.github.jamezrin.alexacrtmcards.SkillUtils;
+import com.github.jamezrin.alexacrtmcards.util.SkillUtils;
 import com.github.jamezrin.crtmcards.EndpointClient;
 import com.github.jamezrin.crtmcards.ResponseParser;
 import com.github.jamezrin.crtmcards.exceptions.ScraperException;

@@ -1,4 +1,4 @@
-package com.github.jamezrin.alexacrtmcards;
+package com.github.jamezrin.alexacrtmcards.util;
 
 import com.amazon.ask.attributes.AttributesManager;
 import com.amazon.ask.dispatcher.request.handler.HandlerInput;
