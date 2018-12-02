@@ -27,8 +27,7 @@ public class SessionEndedRequestHandler implements RequestHandler {
 
     @Override
     public boolean canHandle(HandlerInput input) {
-        return input.matches(requestType(SessionEndedRequest.class)) &&
-                SkillUtils.hasProvidedCard(input);
+        return input.matches(requestType(SessionEndedRequest.class));
     }
 
     @Override
