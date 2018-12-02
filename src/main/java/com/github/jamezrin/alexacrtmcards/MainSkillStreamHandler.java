@@ -8,6 +8,7 @@ import com.github.jamezrin.alexacrtmcards.handlers.intents.LaunchRequestHandler;
 import com.github.jamezrin.alexacrtmcards.handlers.intents.SessionEndedRequestHandler;
 import com.github.jamezrin.alexacrtmcards.handlers.intents.status.ExpirationDateIntentHandler;
 import com.github.jamezrin.alexacrtmcards.handlers.intents.status.ProvideCardDetailsIntentHandler;
+import com.github.jamezrin.alexacrtmcards.handlers.intents.status.RemainingDaysIntentHandler;
 import com.github.jamezrin.crtmcards.EndpointClient;
 
 // com.github.jamezrin.alexacrtmcards.MainSkillStreamHandler
@@ -23,7 +24,7 @@ public class MainSkillStreamHandler extends SkillStreamHandler {
                         new CancelAndStopIntentHandler(),
                         new ProvideCardDetailsIntentHandler(),
                         //new OverviewSkillIntentHandler(endpointClient),
-                        //new RemainingDaysIntentHandler(endpointClient),
+                        new RemainingDaysIntentHandler(endpointClient),
                         new ExpirationDateIntentHandler(endpointClient),
                         //new HelpIntentHandler(),
                         new LaunchRequestHandler(),
