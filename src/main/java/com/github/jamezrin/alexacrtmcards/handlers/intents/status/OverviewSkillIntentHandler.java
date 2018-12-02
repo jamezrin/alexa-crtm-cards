@@ -11,49 +11,29 @@
      the specific language governing permissions and limitations under the License.
 */
 
-package com.github.jamezrin.alexacrtmcards.handlers;
+package com.github.jamezrin.alexacrtmcards.handlers.intents.status;
 
 import com.amazon.ask.dispatcher.request.handler.HandlerInput;
 import com.amazon.ask.dispatcher.request.handler.RequestHandler;
-import com.amazon.ask.model.*;
+import com.amazon.ask.model.Response;
 import com.amazon.ask.response.ResponseBuilder;
+import com.github.jamezrin.alexacrtmcards.SkillUtils;
 
 import java.util.Optional;
 
 import static com.amazon.ask.request.Predicates.intentName;
 
-public class ProvideCardDetailsIntentHandler implements RequestHandler {
-
+public class OverviewSkillIntentHandler implements RequestHandler {
     @Override
     public boolean canHandle(HandlerInput input) {
-        return input.matches(intentName("ProvideCardDetailsIntent"));
+        return input.matches(intentName("OverviewSkillIntent")
+                .and(SkillUtils::hasProvidedCard));
     }
 
     @Override
     public Optional<Response> handle(HandlerInput input) {
-        /*
-        Request request = input.getRequestEnvelope().getRequest();
-
-        IntentRequest intentRequest = (IntentRequest) request;
-        Intent intent = intentRequest.getIntent();
-        Map<String, Slot> slots = intent.getSlots();
-
-        Slot prefix = slots.get("prefix");
-        Slot number = slots.get("number");
-
-        Map<String, Object> attributes = input.getAttributesManager().getPersistentAttributes();
-
-        attributes.put("prefix", prefix.getValue());
-        attributes.put("number", number.getValue());
-
-        input.getAttributesManager().setPersistentAttributes(attributes);
-        input.getAttributesManager().savePersistentAttributes();
-        */
-
         ResponseBuilder builder = input.getResponseBuilder();
-        // input.getRequestEnvelope().getSession().getUser().getUserId()
-        builder.withSpeech("Comprueba la base de datos");
-
+        builder.withSpeech("Está funcionando, bien!");
         return builder.build();
     }
 }

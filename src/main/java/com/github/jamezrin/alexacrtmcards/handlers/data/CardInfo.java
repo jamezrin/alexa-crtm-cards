@@ -1,4 +1,4 @@
-package com.github.jamezrin.alexacrtmcards;
+package com.github.jamezrin.alexacrtmcards.handlers.data;
 
 public class CardInfo {
     private final String cardPrefix;

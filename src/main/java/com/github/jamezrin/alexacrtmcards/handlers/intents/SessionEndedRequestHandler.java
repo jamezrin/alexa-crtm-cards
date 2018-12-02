@@ -11,30 +11,30 @@
      the specific language governing permissions and limitations under the License.
 */
 
-package com.github.jamezrin.alexacrtmcards.handlers.defaults;
+package com.github.jamezrin.alexacrtmcards.handlers.intents;
 
 import com.amazon.ask.dispatcher.request.handler.HandlerInput;
 import com.amazon.ask.dispatcher.request.handler.RequestHandler;
 import com.amazon.ask.model.Response;
+import com.amazon.ask.model.SessionEndedRequest;
+import com.github.jamezrin.alexacrtmcards.SkillUtils;
 
 import java.util.Optional;
 
-import static com.amazon.ask.request.Predicates.intentName;
+import static com.amazon.ask.request.Predicates.requestType;
 
-public class HelpIntentHandler implements RequestHandler {
+public class SessionEndedRequestHandler implements RequestHandler {
 
     @Override
     public boolean canHandle(HandlerInput input) {
-        return input.matches(intentName("AMAZON.HelpIntent"));
+        return input.matches(requestType(SessionEndedRequest.class)) &&
+                SkillUtils.hasProvidedCard(input);
     }
 
     @Override
     public Optional<Response> handle(HandlerInput input) {
-        String speechText = "You can say hello to me!";
-        return input.getResponseBuilder()
-                .withSpeech(speechText)
-                .withSimpleCard("HelloWorld", speechText)
-                .withReprompt(speechText)
-                .build();
+        // any cleanup logic goes here
+        return input.getResponseBuilder().build();
     }
+
 }

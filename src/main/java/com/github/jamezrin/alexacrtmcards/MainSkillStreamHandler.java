@@ -3,10 +3,11 @@ package com.github.jamezrin.alexacrtmcards;
 import com.amazon.ask.Skill;
 import com.amazon.ask.SkillStreamHandler;
 import com.amazon.ask.Skills;
-import com.github.jamezrin.alexacrtmcards.handlers.*;
-import com.github.jamezrin.alexacrtmcards.handlers.defaults.CancelAndStopIntentHandler;
-import com.github.jamezrin.alexacrtmcards.handlers.defaults.HelpIntentHandler;
-import com.github.jamezrin.alexacrtmcards.handlers.defaults.SessionEndedRequestHandler;
+import com.github.jamezrin.alexacrtmcards.handlers.intents.CancelAndStopIntentHandler;
+import com.github.jamezrin.alexacrtmcards.handlers.intents.LaunchRequestHandler;
+import com.github.jamezrin.alexacrtmcards.handlers.intents.SessionEndedRequestHandler;
+import com.github.jamezrin.alexacrtmcards.handlers.intents.status.ExpirationDateIntentHandler;
+import com.github.jamezrin.alexacrtmcards.handlers.intents.status.ProvideCardDetailsIntentHandler;
 import com.github.jamezrin.crtmcards.EndpointClient;
 
 // com.github.jamezrin.alexacrtmcards.MainSkillStreamHandler
@@ -20,14 +21,14 @@ public class MainSkillStreamHandler extends SkillStreamHandler {
         return Skills.standard()
                 .addRequestHandlers(
                         new CancelAndStopIntentHandler(),
-                        new OverviewSkillIntentHandler(),
                         new ProvideCardDetailsIntentHandler(),
-                        new RemainingDaysIntentHandler(),
+                        //new OverviewSkillIntentHandler(endpointClient),
+                        //new RemainingDaysIntentHandler(endpointClient),
                         new ExpirationDateIntentHandler(endpointClient),
-                        new HelpIntentHandler(),
+                        //new HelpIntentHandler(),
                         new LaunchRequestHandler(),
                         new SessionEndedRequestHandler())
-                .withTableName("crtm-cards")
+                .withTableName("crtm-status")
                 .withSkillId(SKILL_ID)
                 .build();
     }

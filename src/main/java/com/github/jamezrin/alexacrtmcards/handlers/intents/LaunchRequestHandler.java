@@ -11,7 +11,7 @@
      the specific language governing permissions and limitations under the License.
 */
 
-package com.github.jamezrin.alexacrtmcards.handlers;
+package com.github.jamezrin.alexacrtmcards.handlers.intents;
 
 import com.amazon.ask.dispatcher.request.handler.HandlerInput;
 import com.amazon.ask.dispatcher.request.handler.RequestHandler;
