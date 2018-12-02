@@ -69,23 +69,23 @@ public class ExpirationDateIntentHandler implements RequestHandler {
                     LocalDate expDate = lastRenewal.getExpirationDate();
                     if (expDate != null) {
                         if (expDate.isAfter(LocalDate.now())) {
-                            String speechDate = String.format("Tu tarjeta caduca el dia %s",
+                            String speechText = String.format("Tu tarjeta caduca el dia %s",
                                     SkillUtils.formatSpeechDate(expDate));
-                            builder.withSpeech(speechDate);
-                            builder.withReprompt(speechDate);
-                            builder.withSimpleCard("Tarjeta", speechDate);
+                            builder.withSpeech(speechText);
+                            builder.withReprompt(speechText);
+                            builder.withSimpleCard("Tarjeta", speechText);
                         } else {
-                            String speechDate = String.format("Tu tarjeta caducó el dia %s",
+                            String speechText = String.format("Tu tarjeta caducó el dia %s",
                                     SkillUtils.formatSpeechDate(expDate));
-                            builder.withSpeech(speechDate);
-                            builder.withReprompt(speechDate);
-                            builder.withSimpleCard("Caducada", speechDate);
+                            builder.withSpeech(speechText);
+                            builder.withReprompt(speechText);
+                            builder.withSimpleCard("Caducada", speechText);
                         }
                     } else {
-                        String speechExp = "Tu tarjeta ya ha caducado";
-                        builder.withSpeech(speechExp);
-                        builder.withReprompt(speechExp);
-                        builder.withSimpleCard("Caducada", speechExp);
+                        String speechText = "Tu tarjeta ya ha caducado";
+                        builder.withSpeech(speechText);
+                        builder.withReprompt(speechText);
+                        builder.withSimpleCard("Caducada", speechText);
                     }
                 }
             } catch (ArrayIndexOutOfBoundsException e) {
