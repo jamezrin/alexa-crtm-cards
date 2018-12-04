@@ -1,13 +1,21 @@
 #!/bin/bash
 
+#NAME="alexa-crtm-cards-server"
 NAME="alexa-crtm-cards"
-PACKAGE="target/crtmcards-1.0-SNAPSHOT.jar"
+BUILD_PATH="target/${NAME}.jar"
+FUNCTION_NAME="alexa-crtm-cards-test-server"
 
-mvn clean package \
-  -DskipTests
+function build {
+    mvn clean package \
+      -DskipTests \
+      -Djar.finalName=${NAME}
+}
 
-aws lambda update-function-code \
-  --function-name=${NAME} \
-  --zip-file=fileb://${PACKAGE}
+function deploy {
+    aws lambda update-function-code \
+     --function-name=${FUNCTION_NAME} \
+     --zip-file=fileb://${BUILD_PATH}
+}
 
-echo "Done."
+build && deploy && echo "Successfully built and deployed" && exit 0
+echo "An error occurred while executing this script" && exit 1
