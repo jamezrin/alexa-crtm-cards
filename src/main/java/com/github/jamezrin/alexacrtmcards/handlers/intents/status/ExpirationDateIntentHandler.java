@@ -23,8 +23,8 @@ import com.github.jamezrin.crtmcards.EndpointClient;
 import com.github.jamezrin.crtmcards.ResponseParser;
 import com.github.jamezrin.crtmcards.exceptions.ScraperException;
 import com.github.jamezrin.crtmcards.exceptions.UnsuccessfulRequestException;
-import com.github.jamezrin.crtmcards.types.Card;
 import com.github.jamezrin.crtmcards.types.CardRenewal;
+import com.github.jamezrin.crtmcards.types.CrtmCard;
 import org.apache.http.HttpResponse;
 
 import java.io.IOException;
@@ -59,7 +59,7 @@ public class ExpirationDateIntentHandler implements RequestHandler {
         try {
             HttpResponse response = endpointClient.connect(ttpPrefix, ttpNumber);
             ResponseParser responseParser = new ResponseParser(response);
-            Card card = responseParser.parse();
+            CrtmCard card = responseParser.parse();
 
             try {
                 int renewalsLen = card.getRenewals().length;

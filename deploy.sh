@@ -3,7 +3,7 @@
 NAME="alexa-crtm-cards"
 PACKAGE="target/crtmcards-1.0-SNAPSHOT.jar"
 
-mvn package \
+mvn clean package \
   -DskipTests
 
 aws lambda update-function-code \
