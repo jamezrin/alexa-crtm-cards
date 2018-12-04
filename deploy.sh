@@ -1,9 +1,9 @@
 #!/bin/bash
 
-#NAME="alexa-crtm-cards-server"
 NAME="alexa-crtm-cards"
 BUILD_PATH="target/${NAME}.jar"
-FUNCTION_NAME="alexa-crtm-cards-test-server"
+
+[[ -z "$FUNCTION_NAME" ]] && echo "The function name env variable needs to be set" && exit 1
 
 function build {
     mvn clean package \
@@ -17,5 +17,5 @@ function deploy {
      --zip-file=fileb://${BUILD_PATH}
 }
 
-build && deploy && echo "Successfully built and deployed" && exit 0
-echo "An error occurred while executing this script" && exit 1
+build && deploy && echo -e "\n\033[0;32mSuccessfully built and deployed\033[0m" && exit 0
+echo -e "\n\033[0;31mAn error occurred while executing this script\033[0m" && exit 1
