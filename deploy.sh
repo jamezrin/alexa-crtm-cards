@@ -17,5 +17,8 @@ function deploy {
      --zip-file=fileb://${BUILD_PATH}
 }
 
-build && deploy && echo -e "\n\033[0;32mSuccessfully built and deployed\033[0m" && exit 0
-echo -e "\n\033[0;31mAn error occurred while executing this script\033[0m" && exit 1
+if build && deploy; then
+    echo -e "\n\033[0;32mSuccessfully built and deployed\033[0m" && exit 0
+else
+    echo -e "\n\033[0;31mAn error occurred while executing this script\033[0m" && exit 1
+fi
