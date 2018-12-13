@@ -1,8 +1,8 @@
 package com.github.jamezrin.alexacrtmcards.data;
 
 public class CardInfo {
-    private final String cardPrefix;
-    private final String cardNumber;
+    private String cardPrefix;
+    private String cardNumber;
 
     public CardInfo(String cardPrefix, String cardNumber) {
         this.cardPrefix = cardPrefix;
@@ -13,8 +13,16 @@ public class CardInfo {
         return cardPrefix;
     }
 
+    public void setCardPrefix(String cardPrefix) {
+        this.cardPrefix = cardPrefix;
+    }
+
     public String getCardNumber() {
         return cardNumber;
+    }
+
+    public void setCardNumber(String cardNumber) {
+        this.cardNumber = cardNumber;
     }
 
     @Override
