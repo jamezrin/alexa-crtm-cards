@@ -3,6 +3,7 @@ package com.github.jamezrin.alexacrtmcards;
 import com.amazon.ask.Skill;
 import com.amazon.ask.SkillStreamHandler;
 import com.amazon.ask.Skills;
+import com.github.jamezrin.alexacrtmcards.handlers.exceptions.*;
 import com.github.jamezrin.alexacrtmcards.handlers.intents.CancelAndStopIntentHandler;
 import com.github.jamezrin.alexacrtmcards.handlers.intents.LaunchRequestHandler;
 import com.github.jamezrin.alexacrtmcards.handlers.intents.SessionEndedRequestHandler;
@@ -30,6 +31,13 @@ public class MainSkillStreamHandler extends SkillStreamHandler {
                         //new HelpIntentHandler(),
                         new LaunchRequestHandler(),
                         new SessionEndedRequestHandler())
+                .addExceptionHandlers(
+                        new InvalidCardNumberExceptionHandler(),
+                        new InactiveCardNumberExceptionHandler(),
+                        new CurrentlyUnavailableExceptionHandler(),
+                        new NotExistentCardNumberExceptionHandler(),
+                        new UnsuccessfulRequestExceptionHandler(),
+                        new ScraperExceptionHandler())
                 .withTableName(tableName)
                 .withSkillId(skillId)
                 .build();
