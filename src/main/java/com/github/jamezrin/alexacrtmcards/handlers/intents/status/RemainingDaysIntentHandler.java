@@ -13,6 +13,7 @@ import com.github.jamezrin.crtmcards.exceptions.UnsuccessfulRequestException;
 import com.github.jamezrin.crtmcards.types.CardRenewal;
 import com.github.jamezrin.crtmcards.types.CrtmCard;
 import org.apache.http.HttpResponse;
+import org.slf4j.Logger;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -20,9 +21,12 @@ import java.util.Map;
 import java.util.Optional;
 
 import static com.amazon.ask.request.Predicates.intentName;
+import static org.slf4j.LoggerFactory.getLogger;
 
 public class RemainingDaysIntentHandler implements RequestHandler {
     private final EndpointClient endpointClient;
+
+    private static Logger LOG = getLogger(RemainingDaysIntentHandler.class);
 
     public RemainingDaysIntentHandler(EndpointClient endpointClient) {
         this.endpointClient = endpointClient;
@@ -76,23 +80,27 @@ public class RemainingDaysIntentHandler implements RequestHandler {
                     }
                 }
             } catch (ArrayIndexOutOfBoundsException e) {
+                LOG.error(e.getMessage(), e);
                 String speechText = "Esta tarjeta no se ha llegado a recargar nunca";
                 builder.withSpeech(speechText);
                 builder.withReprompt(speechText);
                 builder.withSimpleCard("Error", speechText);
             }
         } catch (IOException | UnsuccessfulRequestException e) {
+            LOG.error(e.getMessage(), e);
             String speechText = "No se ha podido contactar con el servidor. Inténtalo mas tarde";
             builder.withSpeech(speechText);
             builder.withReprompt(speechText);
             builder.withSimpleCard("Error", speechText);
         } catch (ScraperException e) {
+            LOG.error(e.getMessage(), e);
             String speechText = "No se ha podido extraer la información. Inténtalo mas tarde";
             builder.withSpeech(speechText);
             builder.withReprompt(speechText);
             builder.withSimpleCard("Error", speechText);
         }
 
+        builder.withShouldEndSession(true);
         return builder.build();
     }
 }

@@ -24,33 +24,31 @@ public class ProvideCardDetailsIntentHandler implements RequestHandler {
         ResponseBuilder builder = input.getResponseBuilder();
         Request request = input.getRequestEnvelope().getRequest();
         IntentRequest intentRequest = (IntentRequest) request;
+        Intent intent = intentRequest.getIntent();
+        Map<String, Slot> slots = intent.getSlots();
 
-        if (intentRequest.getDialogState() == DialogState.COMPLETED) {
-            Intent intent = intentRequest.getIntent();
-            Map<String, Slot> slots = intent.getSlots();
-
+        Slot prefixSlot = slots.get("prefix");
+        Slot numberSlot = slots.get("number");
+        //if (intentRequest.getDialogState() == DialogState.COMPLETED) {
+        if (prefixSlot.getValue() != null && numberSlot.getValue() != null) {
             AttributesManager attributesManager = input.getAttributesManager();
             Map<String, Object> attributes = attributesManager.getPersistentAttributes();
 
-            // Dame los tres ultimos digitos de la primera linea situados en la parte frontal de tu tarjeta, al lado de tu foto
-            Slot prefixSlot = slots.get("prefix");
+
             String prefixSlotValue = prefixSlot.getValue();
             attributes.put("ttp_prefix", prefixSlotValue);
 
-            // Dame los diez digitos de la segunda linea situados en la parte frontal de tu tarjeta, al lado de tu foto
-            Slot numberSlot = slots.get("number");
             String numberSlotValue = numberSlot.getValue();
             attributes.put("ttp_number", numberSlotValue);
 
             attributesManager.setPersistentAttributes(attributes);
             attributesManager.savePersistentAttributes();
 
-            String speechText = "<p>¡Ya está todo! Ya no tendrás que hacer este paso nunca mas</p>" +
-                    "<p>Dime algo como <emphasis level=\"moderate\">Cuando caduca mi tarjeta de transporte</emphasis>";
-
+            String speechText = "<p>¡Ya está todo! Ya no tendrás que hacer este paso nunca mas. </p>" +
+                    "<p>Dime algo como Cuando caduca mi tarjeta de transporte</p>";
             builder.withSpeech(speechText);
             builder.withReprompt(speechText);
-            builder.withSimpleCard("Hecho", speechText);
+            builder.withSimpleCard("¡Ya está!", speechText);
 
             builder.withShouldEndSession(false);
         } else {

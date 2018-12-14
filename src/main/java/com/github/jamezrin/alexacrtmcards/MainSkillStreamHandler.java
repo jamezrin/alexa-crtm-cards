@@ -14,10 +14,11 @@ import com.github.jamezrin.crtmcards.EndpointClient;
 // com.github.jamezrin.alexacrtmcards.MainSkillStreamHandler
 
 public class MainSkillStreamHandler extends SkillStreamHandler {
-    public static final String SKILL_ID = "amzn1.ask.skill.def1ad6d-f8e8-49f0-8d9f-6558599af1eb";
-
     private static Skill getSkill() {
         EndpointClient endpointClient = new EndpointClient();
+
+        String skillId = System.getenv("SKILL_ID");
+        String tableName = System.getenv("TABLE_NAME");
 
         return Skills.standard()
                 .addRequestHandlers(
@@ -29,8 +30,8 @@ public class MainSkillStreamHandler extends SkillStreamHandler {
                         //new HelpIntentHandler(),
                         new LaunchRequestHandler(),
                         new SessionEndedRequestHandler())
-                .withTableName("crtm-status")
-                .withSkillId(SKILL_ID)
+                .withTableName(tableName)
+                .withSkillId(skillId)
                 .build();
     }
 
