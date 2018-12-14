@@ -20,7 +20,6 @@ public class LaunchRequestHandler implements RequestHandler {
     @Override
     public Optional<Response> handle(HandlerInput input) {
         ResponseBuilder builder = input.getResponseBuilder();
-        //TODO ADD SOME ACTUALLY VALUABLE INFORMATION
         builder.withSpeech("Está funcionando, bien!");
         return builder.build();
     }

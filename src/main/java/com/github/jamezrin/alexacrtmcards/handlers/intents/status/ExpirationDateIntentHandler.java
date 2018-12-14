@@ -21,6 +21,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import static com.amazon.ask.request.Predicates.intentName;
+import static com.github.jamezrin.alexacrtmcards.util.SkillUtils.hasProvidedCard;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class ExpirationDateIntentHandler implements RequestHandler {
@@ -35,7 +36,7 @@ public class ExpirationDateIntentHandler implements RequestHandler {
     @Override
     public boolean canHandle(HandlerInput input) {
         return input.matches(intentName("ExpirationDateIntent")
-                .and(SkillUtils::hasProvidedCard));
+                .and(hasProvidedCard()));
     }
 
     @Override

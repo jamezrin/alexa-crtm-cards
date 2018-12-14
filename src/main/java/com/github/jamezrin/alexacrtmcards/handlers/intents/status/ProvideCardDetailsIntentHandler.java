@@ -10,13 +10,13 @@ import java.util.Map;
 import java.util.Optional;
 
 import static com.amazon.ask.request.Predicates.intentName;
-import static com.github.jamezrin.alexacrtmcards.util.SkillUtils.hasProvidedCard;
+import static com.github.jamezrin.alexacrtmcards.util.SkillUtils.cardSetupNeeded;
 
 public class ProvideCardDetailsIntentHandler implements RequestHandler {
     @Override
     public boolean canHandle(HandlerInput input) {
         return input.matches(intentName("ProvideCardDetailsIntent")
-                .or((handlerInput) -> !hasProvidedCard(handlerInput)));
+                .or(cardSetupNeeded()));
     }
 
     @Override
@@ -28,17 +28,23 @@ public class ProvideCardDetailsIntentHandler implements RequestHandler {
         Map<String, Slot> slots = intent.getSlots();
 
         Slot prefixSlot = slots.get("prefix");
+        String prefixSlotValue = prefixSlot.getValue();
+        if (prefixSlotValue != null) {
+            // TODO Validate and if unsuccessful, return elicit directive
+        }
+
         Slot numberSlot = slots.get("number");
-        //if (intentRequest.getDialogState() == DialogState.COMPLETED) {
-        if (prefixSlot.getValue() != null && numberSlot.getValue() != null) {
+        String numberSlotValue = numberSlot.getValue();
+        if (numberSlotValue != null) {
+            // TODO Validate and if unsuccessful, return elicit directive
+        }
+
+        // For some reason the dialog state never gets to be `COMPLETED`
+        if (prefixSlotValue != null && numberSlotValue != null) {
             AttributesManager attributesManager = input.getAttributesManager();
             Map<String, Object> attributes = attributesManager.getPersistentAttributes();
 
-
-            String prefixSlotValue = prefixSlot.getValue();
             attributes.put("ttp_prefix", prefixSlotValue);
-
-            String numberSlotValue = numberSlot.getValue();
             attributes.put("ttp_number", numberSlotValue);
 
             attributesManager.setPersistentAttributes(attributes);

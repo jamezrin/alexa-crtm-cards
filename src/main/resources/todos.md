@@ -4,8 +4,8 @@
 - [x] Create intent to change saved card number
 - [ ] Check card state before saving (ProvideCardDetailsIntent)
 - [ ] Use exception handlers and handle every exception
-- [ ] Use exception handlers and handle every exception
 - [ ] Validate card input and then ask for the slot again (elicit) 
+- [ ] Try card against server after validating it and if it's not valid, ask again
 - [ ] Save last card state to the database
 - [x] Create intent to say remaining days to expiration date
 - [ ] Create overview intent which says everything just by opening it

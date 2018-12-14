@@ -1,12 +1,13 @@
 package com.github.jamezrin.alexacrtmcards.util;
 
-import com.amazon.ask.attributes.AttributesManager;
 import com.amazon.ask.dispatcher.request.handler.HandlerInput;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
-import java.util.Map;
+import java.util.function.Predicate;
+
+import static com.amazon.ask.request.Predicates.intentName;
 
 public class SkillUtils {
     // https://docs.oracle.com/javase/8/docs/api/java/time/format/DateTimeFormatter.html
@@ -17,11 +18,24 @@ public class SkillUtils {
         ));
     }
 
-    public static boolean hasProvidedCard(HandlerInput input) {
-        AttributesManager attributesManager = input.getAttributesManager();
-        Map<String, Object> attributes = attributesManager.getPersistentAttributes();
+    public static Predicate<HandlerInput> hasPersistentAttribute(String attributeName) {
+        return handlerInput -> handlerInput.getAttributesManager().getPersistentAttributes()
+                .containsKey(attributeName);
+    }
 
-        return attributes.containsKey("ttp_prefix") &&
-                attributes.containsKey("ttp_number");
+    public static Predicate<HandlerInput> hasProvidedCard() {
+        return hasPersistentAttribute("ttp_prefix")
+                .and(hasPersistentAttribute("ttp_number"));
+    }
+
+    public static Predicate<HandlerInput> requiresCard() {
+        return intentName("OverviewSkillIntent")
+                .or(intentName("RemainingDaysIntent"))
+                .or(intentName("ExpirationDateIntent"));
+    }
+
+    public static Predicate<HandlerInput> cardSetupNeeded() {
+        return requiresCard().and(
+                hasProvidedCard().negate());
     }
 }
