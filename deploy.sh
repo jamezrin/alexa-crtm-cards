@@ -1,14 +1,13 @@
 #!/bin/bash
 
-NAME="alexa-crtm-cards"
-BUILD_PATH="target/${NAME}.jar"
-
-[[ -z "$FUNCTION_NAME" ]] && echo "The function name env variable needs to be set" && exit 1
+[[ -z "$PROJECT_NAME" ]] && PROJECT_NAME="alexa-crtm-cards"
+[[ -z "$BUILD_PATH" ]] && BUILD_PATH="target/${PROJECT_NAME}.jar"
+[[ -z "$FUNCTION_NAME" ]] && echo -e "\n\033[0;31mThe function name env variable needs to be set\033[0m" && exit 1
 
 function build {
     mvn clean package \
       -DskipTests \
-      -Djar.finalName=${NAME}
+      -Djar.finalName=${PROJECT_NAME}
 }
 
 function deploy {
