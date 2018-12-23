@@ -20,7 +20,8 @@ public class LaunchRequestHandler implements RequestHandler {
     @Override
     public Optional<Response> handle(HandlerInput input) {
         ResponseBuilder builder = input.getResponseBuilder();
-        builder.withSpeech("Está funcionando, bien!");
+        //TODO Fix this
+        builder.withSpeech("Petición de lanzamiento está funcionando, bien!");
         return builder.build();
     }
 

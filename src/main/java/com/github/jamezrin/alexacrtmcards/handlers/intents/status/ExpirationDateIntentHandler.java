@@ -5,7 +5,7 @@ import com.amazon.ask.dispatcher.request.handler.HandlerInput;
 import com.amazon.ask.dispatcher.request.handler.RequestHandler;
 import com.amazon.ask.model.Response;
 import com.amazon.ask.response.ResponseBuilder;
-import com.github.jamezrin.alexacrtmcards.util.SkillUtils;
+import com.github.jamezrin.alexacrtmcards.util.HumanDateFormatter;
 import com.github.jamezrin.crtmcards.EndpointClient;
 import com.github.jamezrin.crtmcards.ResponseParser;
 import com.github.jamezrin.crtmcards.exceptions.ScraperException;
@@ -21,7 +21,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import static com.amazon.ask.request.Predicates.intentName;
-import static com.github.jamezrin.alexacrtmcards.util.SkillUtils.hasProvidedCard;
+import static com.github.jamezrin.alexacrtmcards.util.SkillPredicates.hasProvidedCard;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class ExpirationDateIntentHandler implements RequestHandler {
@@ -62,13 +62,13 @@ public class ExpirationDateIntentHandler implements RequestHandler {
                     if (expDate != null) {
                         if (expDate.isAfter(LocalDate.now())) {
                             String speechText = String.format("Tu tarjeta caduca el dia %s",
-                                    SkillUtils.formatSpeechDate(expDate));
+                                    HumanDateFormatter.formatSpeechDate(expDate));
                             builder.withSpeech(speechText);
                             builder.withReprompt(speechText);
                             builder.withSimpleCard("Tarjeta", speechText);
                         } else {
                             String speechText = String.format("Tu tarjeta caducó el dia %s",
-                                    SkillUtils.formatSpeechDate(expDate));
+                                    HumanDateFormatter.formatSpeechDate(expDate));
                             builder.withSpeech(speechText);
                             builder.withReprompt(speechText);
                             builder.withSimpleCard("Caducada", speechText);

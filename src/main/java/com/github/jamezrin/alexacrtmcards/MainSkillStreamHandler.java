@@ -5,6 +5,7 @@ import com.amazon.ask.SkillStreamHandler;
 import com.amazon.ask.Skills;
 import com.github.jamezrin.alexacrtmcards.handlers.exceptions.*;
 import com.github.jamezrin.alexacrtmcards.handlers.intents.CancelAndStopIntentHandler;
+import com.github.jamezrin.alexacrtmcards.handlers.intents.HelpIntentHandler;
 import com.github.jamezrin.alexacrtmcards.handlers.intents.LaunchRequestHandler;
 import com.github.jamezrin.alexacrtmcards.handlers.intents.SessionEndedRequestHandler;
 import com.github.jamezrin.alexacrtmcards.handlers.intents.status.ExpirationDateIntentHandler;
@@ -28,7 +29,7 @@ public class MainSkillStreamHandler extends SkillStreamHandler {
                         //new OverviewSkillIntentHandler(endpointClient),
                         new RemainingDaysIntentHandler(endpointClient),
                         new ExpirationDateIntentHandler(endpointClient),
-                        //new HelpIntentHandler(),
+                        new HelpIntentHandler(),
                         new LaunchRequestHandler(),
                         new SessionEndedRequestHandler())
                 .addExceptionHandlers(

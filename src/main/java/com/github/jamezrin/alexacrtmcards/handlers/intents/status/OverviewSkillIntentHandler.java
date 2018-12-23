@@ -8,7 +8,7 @@ import com.amazon.ask.response.ResponseBuilder;
 import java.util.Optional;
 
 import static com.amazon.ask.request.Predicates.intentName;
-import static com.github.jamezrin.alexacrtmcards.util.SkillUtils.hasProvidedCard;
+import static com.github.jamezrin.alexacrtmcards.util.SkillPredicates.hasProvidedCard;
 
 public class OverviewSkillIntentHandler implements RequestHandler {
     @Override
@@ -20,7 +20,7 @@ public class OverviewSkillIntentHandler implements RequestHandler {
     @Override
     public Optional<Response> handle(HandlerInput input) {
         ResponseBuilder builder = input.getResponseBuilder();
-        builder.withSpeech("Está funcionando, bien!");
+        builder.withSpeech("Overview está funcionando, bien!");
         return builder.build();
     }
 }
