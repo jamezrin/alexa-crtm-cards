@@ -4,7 +4,6 @@ import com.github.jamezrin.crtmcards.types.CardRenewal;
 import com.github.jamezrin.crtmcards.types.CardType;
 import com.github.jamezrin.crtmcards.types.CrtmCard;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;

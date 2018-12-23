@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 BRANCH=`git rev-parse --abbrev-ref HEAD`
 [[ -z "$PROJECT_NAME" ]] && PROJECT_NAME="alexa-crtm-cards"
