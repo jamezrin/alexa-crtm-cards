@@ -62,13 +62,13 @@ public class ExpirationDateIntentHandler implements RequestHandler {
                     if (expDate != null) {
                         if (expDate.isAfter(LocalDate.now())) {
                             String speechText = String.format("Tu tarjeta caduca el dia %s",
-                                    HumanDateFormatter.formatSpeechDate(expDate));
+                                    HumanDateFormatter.formatPrettyDate(expDate));
                             builder.withSpeech(speechText);
                             builder.withReprompt(speechText);
                             builder.withSimpleCard("Tarjeta", speechText);
                         } else {
                             String speechText = String.format("Tu tarjeta caducó el dia %s",
-                                    HumanDateFormatter.formatSpeechDate(expDate));
+                                    HumanDateFormatter.formatPrettyDate(expDate));
                             builder.withSpeech(speechText);
                             builder.withReprompt(speechText);
                             builder.withSimpleCard("Caducada", speechText);

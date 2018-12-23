@@ -1,10 +1,10 @@
 package com.github.jamezrin.alexacrtmcards.data;
 
-public class CardInfo {
+public final class UserCardInfo {
     private String cardPrefix;
     private String cardNumber;
 
-    public CardInfo(String cardPrefix, String cardNumber) {
+    public UserCardInfo(String cardPrefix, String cardNumber) {
         this.cardPrefix = cardPrefix;
         this.cardNumber = cardNumber;
     }
@@ -27,7 +27,7 @@ public class CardInfo {
 
     @Override
     public String toString() {
-        return "CardInfo{" +
+        return "UserCardInfo{" +
                 "cardPrefix='" + cardPrefix + '\'' +
                 ", cardNumber='" + cardNumber + '\'' +
                 '}';

@@ -68,7 +68,7 @@ public class RemainingDaysIntentHandler implements RequestHandler {
                             builder.withSimpleCard("Tarjeta", speechText);
                         } else {
                             String speechText = String.format("Tu tarjeta caducó el dia %s",
-                                    HumanDateFormatter.formatSpeechDate(expDate));
+                                    HumanDateFormatter.formatPrettyDate(expDate));
                             builder.withSpeech(speechText);
                             builder.withReprompt(speechText);
                             builder.withSimpleCard("Caducada", speechText);

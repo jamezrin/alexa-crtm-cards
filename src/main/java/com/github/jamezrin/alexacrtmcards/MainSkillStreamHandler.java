@@ -3,6 +3,11 @@ package com.github.jamezrin.alexacrtmcards;
 import com.amazon.ask.Skill;
 import com.amazon.ask.SkillStreamHandler;
 import com.amazon.ask.Skills;
+import com.amazon.ask.attributes.persistence.impl.DynamoDbPersistenceAdapter;
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
+import com.amazonaws.services.dynamodbv2.document.DynamoDB;
 import com.github.jamezrin.alexacrtmcards.handlers.exceptions.*;
 import com.github.jamezrin.alexacrtmcards.handlers.intents.CancelAndStopIntentHandler;
 import com.github.jamezrin.alexacrtmcards.handlers.intents.HelpIntentHandler;
@@ -39,6 +44,10 @@ public class MainSkillStreamHandler extends SkillStreamHandler {
                         new NotExistentCardNumberExceptionHandler(),
                         new UnsuccessfulRequestExceptionHandler(),
                         new ScraperExceptionHandler())
+                .withPersistenceAdapter(DynamoDbPersistenceAdapter.builder()
+                        .withDynamoDbClient(AmazonDynamoDBClientBuilder.standard()
+                                .build())
+                        .build())
                 .withTableName(tableName)
                 .withSkillId(skillId)
                 .build();
