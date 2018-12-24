@@ -98,13 +98,14 @@ public class ProvideCardDetailsIntentHandler implements RequestHandler {
                 attributesManager.setPersistentAttributes(attributes);
                 attributesManager.savePersistentAttributes();
 
-                String speechText = "¡Ya está todo! Ya no tendrás que hacer este paso nunca mas." +
-                        "Pregúntame algo como 'Cuando caduca mi tarjeta de transporte'";
+                String speechText = "¡Ya está todo! Ya no tendrás que hacer este paso nunca mas. " +
+                        "Ahora me puedes decir cosas, por ejemplo 'Alexa, pregunta a Consorcio de Transportes cuando " +
+                        "caduca mi tarjeta''";
                 builder.withSpeech(speechText);
                 builder.withReprompt(speechText);
                 builder.withSimpleCard("¡Ya está!", speechText);
 
-                builder.withShouldEndSession(false);
+                builder.withShouldEndSession(true);
             } catch (InvalidCardNumberException e) {
                 LOG.error(e.getMessage(), e);
                 String speechText = "La tarjeta que has introducido no parece ser valida" +

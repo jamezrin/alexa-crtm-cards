@@ -23,7 +23,7 @@ public class RequiredCardDetailsIntentHandler implements RequestHandler {
                 "decir 'configurar'. Si necesitas mas ayuda di 'ayuda' y te daré mas detalles.";
         builder.withSpeech(speechText);
         builder.withReprompt(speechText);
-        builder.withSimpleCard("Configurame", speechText);
+        builder.withSimpleCard("Configúrame", speechText);
         builder.withShouldEndSession(false);
         return builder.build();
     }
