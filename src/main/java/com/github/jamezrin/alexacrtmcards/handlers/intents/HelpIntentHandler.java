@@ -21,7 +21,7 @@ public class HelpIntentHandler implements RequestHandler {
     public Optional<Response> handle(HandlerInput input) {
         ResponseBuilder builder = input.getResponseBuilder();
 
-        if (hasProvidedCard().test(input)) {
+        if (input.matches(hasProvidedCard())) {
             String speechText =
                     "Me puedes pedir que te diga cuando caduca tu tarjeta diciendo 'cuando caduca mi tarjeta' " +
                     "o si lo prefieres dí 'cuantos dias le quedan a mi tarjeta'. Recuerda que las demás veces que " +
