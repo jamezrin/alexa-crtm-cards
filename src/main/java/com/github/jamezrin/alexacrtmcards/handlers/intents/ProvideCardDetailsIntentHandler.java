@@ -98,9 +98,9 @@ public class ProvideCardDetailsIntentHandler implements RequestHandler {
                 attributesManager.setPersistentAttributes(attributes);
                 attributesManager.savePersistentAttributes();
 
-                String speechText = "¡Ya está todo! Ya no tendrás que hacer este paso nunca mas. " +
-                        "Ahora me puedes decir cosas, por ejemplo 'Alexa, pregunta a Consorcio de Transportes cuando " +
-                        "caduca mi tarjeta''";
+                String speechText =
+                        "¡Ya está todo! Ya no tendrás que hacer este paso nunca mas. Ahora me puedes decir cosas, " +
+                        "por ejemplo 'Alexa, pregunta a Consorcio de Transportes cuando caduca mi tarjeta''";
                 builder.withSpeech(speechText);
                 builder.withReprompt(speechText);
                 builder.withSimpleCard("¡Ya está!", speechText);
@@ -108,7 +108,8 @@ public class ProvideCardDetailsIntentHandler implements RequestHandler {
                 builder.withShouldEndSession(true);
             } catch (InvalidCardNumberException e) {
                 LOG.error(e.getMessage(), e);
-                String speechText = "La tarjeta que has introducido no parece ser valida" +
+                String speechText =
+                        "La tarjeta que has introducido no parece ser valida. " +
                         "Inténtalo otra vez";
                 builder.withSpeech(speechText);
                 builder.withReprompt(speechText);
@@ -117,7 +118,8 @@ public class ProvideCardDetailsIntentHandler implements RequestHandler {
                 builder.withShouldEndSession(true);
             } catch (Exception e) {
                 LOG.error(e.getMessage(), e);
-                String speechText = "Ha ocurrido un error al contactar con el consorcio de transportes." +
+                String speechText =
+                        "Ha ocurrido un error al contactar con el consorcio de transportes. " +
                         "Vuelve a intentarlo mas tarde";
                 builder.withSpeech(speechText);
                 builder.withReprompt(speechText);
