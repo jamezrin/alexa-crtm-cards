@@ -25,10 +25,9 @@ public class HelpIntentHandler implements RequestHandler {
             String speechText =
                     "Me puedes pedir que te diga cuando caduca tu tarjeta diciendo 'cuando caduca mi tarjeta' " +
                     "o si lo prefieres dí 'cuantos dias le quedan a mi tarjeta'. Recuerda que las demás veces que " +
-                    "me preguntes, lo tienes que hacerlo preguntando a la habilidad, por ejemplo 'Alexa, pregunta a " +
+                    "me preguntes, lo tienes que hacer preguntando a la habilidad, por ejemplo 'Alexa, pregunta a " +
                     "Consorcio de Transportes cuando caduca mi tarjeta'";
             builder.withSpeech(speechText);
-            builder.withReprompt(speechText);
             builder.withSimpleCard("Ayuda", speechText);
         } else {
             String speechText =
@@ -38,7 +37,6 @@ public class HelpIntentHandler implements RequestHandler {
                     "segundo numero está justo debajo y es de 10 dígitos. Una vez hecho eso podrás pedirme ayuda otra " +
                     "vez y te dire que puedes hacer.";
             builder.withSpeech(speechText);
-            builder.withReprompt(speechText);
             builder.withSimpleCard("Ayuda", speechText);
         }
 
