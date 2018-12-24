@@ -21,7 +21,7 @@ import static com.amazon.ask.request.Predicates.intentName;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class ProvideCardDetailsIntentHandler implements RequestHandler {
-    private static final Pattern PREFIX_PATTERN = Pattern.compile("^[0-9]{3}$");
+    private static final Pattern PREFIX_PATTERN = Pattern.compile("^(001|002|003|175|251)$");
     private static final Pattern NUMBER_PATTERN = Pattern.compile("^[0-9]{10}$");
 
     private final EndpointClient endpointClient;
@@ -51,9 +51,13 @@ public class ProvideCardDetailsIntentHandler implements RequestHandler {
             if (!PREFIX_PATTERN
                     .matcher(prefixSlotValue)
                     .matches()) {
-                builder.withSpeech(
-                        "Dame los tres últimos dígitos de la primera linea situados en " +
-                        "la parte frontal de tu tarjeta, al lado de tu foto");
+                String speechText =
+                        "No parece ser correcto, el numero que te pido tiene tres dígitos. Vuelve a darme los tres " +
+                        "últimos dígitos de la primera linea situados en la parte frontal de tu tarjeta, al lado " +
+                        "de tu foto";
+                builder.withSpeech(speechText);
+                builder.withReprompt(speechText);
+                builder.withSimpleCard("Prefijo no valido", speechText);
                 builder.addElicitSlotDirective("prefix", intent);
                 return builder.build();
             }
@@ -65,9 +69,12 @@ public class ProvideCardDetailsIntentHandler implements RequestHandler {
             if (!NUMBER_PATTERN
                     .matcher(numberSlotValue)
                     .matches()) {
-                builder.withSpeech(
-                        "Dame los diez dígitos de la segunda linea situados en la parte " +
-                        "frontal de tu tarjeta, al lado de tu foto");
+                String speechText =
+                        "No parece ser correcto, el numero que te pido tiene diez dígitos. Dame los diez dígitos de " +
+                        "la segunda linea situados en la parte frontal de tu tarjeta, al lado de tu foto";
+                builder.withSpeech(speechText);
+                builder.withReprompt(speechText);
+                builder.withSimpleCard("Numero no valido", speechText);
                 builder.addElicitSlotDirective("number", intent);
                 return builder.build();
             }
