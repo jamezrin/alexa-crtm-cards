@@ -22,18 +22,21 @@ public class LaunchRequestHandler implements RequestHandler {
     public Optional<Response> handle(HandlerInput input) {
         ResponseBuilder builder = input.getResponseBuilder();
 
-        if (hasProvidedCard().test(input)) {
+
+        if (input.matches(hasProvidedCard())) {
             String speechText =
                     "Bienvenido de nuevo. ¿Que quieres hacer? Recuerda que " +
                     "me puedes pedir ayuda diciendo 'ayuda'";
             builder.withSpeech(speechText);
             builder.withReprompt(speechText);
+            builder.withSimpleCard("Bienvenido", speechText);
         } else {
             String speechText =
                     "Bienvenido a esta habilidad. Para usar esta habilidad tienes que darme " +
                     "unos dígitos de tu tarjeta de transporte. Para ello dí 'configurar'";
             builder.withSpeech(speechText);
             builder.withReprompt(speechText);
+            builder.withSimpleCard("Bienvenido", speechText);
         }
 
         builder.withShouldEndSession(false);
