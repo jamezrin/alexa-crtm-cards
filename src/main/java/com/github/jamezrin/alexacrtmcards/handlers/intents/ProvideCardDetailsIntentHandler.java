@@ -98,8 +98,8 @@ public class ProvideCardDetailsIntentHandler implements RequestHandler {
                 attributesManager.setPersistentAttributes(attributes);
                 attributesManager.savePersistentAttributes();
 
-                String speechText = "<p>¡Ya está todo! Ya no tendrás que hacer este paso nunca mas. </p>" +
-                        "<p>Pregúntame algo como 'Cuando caduca mi tarjeta de transporte'</p>";
+                String speechText = "¡Ya está todo! Ya no tendrás que hacer este paso nunca mas." +
+                        "Pregúntame algo como 'Cuando caduca mi tarjeta de transporte'";
                 builder.withSpeech(speechText);
                 builder.withReprompt(speechText);
                 builder.withSimpleCard("¡Ya está!", speechText);
@@ -107,17 +107,17 @@ public class ProvideCardDetailsIntentHandler implements RequestHandler {
                 builder.withShouldEndSession(false);
             } catch (InvalidCardNumberException e) {
                 LOG.error(e.getMessage(), e);
-                String speechText = "<p>La tarjeta que has introducido no parece ser valida</p>" +
-                        "<p>Vuelve a intentarlo</p>";
+                String speechText = "La tarjeta que has introducido no parece ser valida" +
+                        "Inténtalo otra vez";
                 builder.withSpeech(speechText);
                 builder.withReprompt(speechText);
-                builder.withSimpleCard("Tarjeta invalida", speechText);
+                builder.withSimpleCard("Tarjeta no valida", speechText);
 
                 builder.withShouldEndSession(true);
             } catch (Exception e) {
                 LOG.error(e.getMessage(), e);
-                String speechText = "<p>Ha ocurrido un error al contactar con el consorcio de transportes.</p>" +
-                        "<p>Vuelve a intentarlo mas tarde</p>";
+                String speechText = "Ha ocurrido un error al contactar con el consorcio de transportes." +
+                        "Vuelve a intentarlo mas tarde";
                 builder.withSpeech(speechText);
                 builder.withReprompt(speechText);
                 builder.withSimpleCard("Error remoto", speechText);
