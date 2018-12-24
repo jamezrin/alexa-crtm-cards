@@ -1,4 +1,4 @@
-package com.github.jamezrin.alexacrtmcards.handlers.intents.status;
+package com.github.jamezrin.alexacrtmcards.handlers.intents;
 
 import com.amazon.ask.attributes.AttributesManager;
 import com.amazon.ask.dispatcher.request.handler.HandlerInput;
@@ -7,6 +7,7 @@ import com.amazon.ask.model.*;
 import com.amazon.ask.response.ResponseBuilder;
 import com.github.jamezrin.crtmcards.EndpointClient;
 import com.github.jamezrin.crtmcards.ResponseParser;
+import com.github.jamezrin.crtmcards.exceptions.InvalidCardNumberException;
 import com.github.jamezrin.crtmcards.types.CrtmCard;
 import org.apache.http.HttpResponse;
 import org.jsoup.helper.Validate;
@@ -17,7 +18,6 @@ import java.util.Optional;
 import java.util.regex.Pattern;
 
 import static com.amazon.ask.request.Predicates.intentName;
-import static com.github.jamezrin.alexacrtmcards.util.SkillPredicates.cardSetupNeeded;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class ProvideCardDetailsIntentHandler implements RequestHandler {
@@ -26,7 +26,7 @@ public class ProvideCardDetailsIntentHandler implements RequestHandler {
 
     private final EndpointClient endpointClient;
 
-    private static Logger LOG = getLogger(RemainingDaysIntentHandler.class);
+    private static Logger LOG = getLogger(ProvideCardDetailsIntentHandler.class);
 
     public ProvideCardDetailsIntentHandler(EndpointClient endpointClient) {
         this.endpointClient = endpointClient;
@@ -34,8 +34,7 @@ public class ProvideCardDetailsIntentHandler implements RequestHandler {
 
     @Override
     public boolean canHandle(HandlerInput input) {
-        return input.matches(intentName("ProvideCardDetailsIntent")
-                .or(cardSetupNeeded()));
+        return input.matches(intentName("ProvideCardDetailsIntent"));
     }
 
     @Override
@@ -99,7 +98,17 @@ public class ProvideCardDetailsIntentHandler implements RequestHandler {
                 builder.withSimpleCard("¡Ya está!", speechText);
 
                 builder.withShouldEndSession(false);
+            } catch (InvalidCardNumberException e) {
+                LOG.error(e.getMessage(), e);
+                String speechText = "<p>La tarjeta que has introducido no parece ser valida</p>" +
+                        "<p>Vuelve a intentarlo</p>";
+                builder.withSpeech(speechText);
+                builder.withReprompt(speechText);
+                builder.withSimpleCard("Tarjeta invalida", speechText);
+
+                builder.withShouldEndSession(true);
             } catch (Exception e) {
+                LOG.error(e.getMessage(), e);
                 String speechText = "<p>Ha ocurrido un error al contactar con el consorcio de transportes.</p>" +
                         "<p>Vuelve a intentarlo mas tarde</p>";
                 builder.withSpeech(speechText);
@@ -108,8 +117,6 @@ public class ProvideCardDetailsIntentHandler implements RequestHandler {
 
                 builder.withShouldEndSession(true);
             }
-
-
         } else {
             builder.addDelegateDirective(intentRequest.getIntent());
         }

@@ -1,4 +1,4 @@
-package com.github.jamezrin.alexacrtmcards.handlers.intents.status;
+package com.github.jamezrin.alexacrtmcards.handlers.intents;
 
 import com.amazon.ask.attributes.AttributesManager;
 import com.amazon.ask.dispatcher.request.handler.HandlerInput;
@@ -24,18 +24,18 @@ import static com.amazon.ask.request.Predicates.intentName;
 import static com.github.jamezrin.alexacrtmcards.util.SkillPredicates.hasProvidedCard;
 import static org.slf4j.LoggerFactory.getLogger;
 
-public class ExpirationDateIntentHandler implements RequestHandler {
+public class RemainingDaysIntentHandler implements RequestHandler {
     private final EndpointClient endpointClient;
 
-    private static Logger LOG = getLogger(ExpirationDateIntentHandler.class);
+    private static Logger LOG = getLogger(RemainingDaysIntentHandler.class);
 
-    public ExpirationDateIntentHandler(EndpointClient endpointClient) {
+    public RemainingDaysIntentHandler(EndpointClient endpointClient) {
         this.endpointClient = endpointClient;
     }
 
     @Override
     public boolean canHandle(HandlerInput input) {
-        return input.matches(intentName("ExpirationDateIntent")
+        return input.matches(intentName("RemainingDaysIntent")
                 .and(hasProvidedCard()));
     }
 
@@ -61,8 +61,8 @@ public class ExpirationDateIntentHandler implements RequestHandler {
                     LocalDate expDate = lastRenewal.getExpirationDate();
                     if (expDate != null) {
                         if (expDate.isAfter(LocalDate.now())) {
-                            String speechText = String.format("Tu tarjeta caduca el dia %s",
-                                    HumanDateFormatter.formatPrettyDate(expDate));
+                            String speechText = String.format("Tu tarjeta caducará dentro de %s dias",
+                                    LocalDate.now().until(expDate).getDays());
                             builder.withSpeech(speechText);
                             builder.withReprompt(speechText);
                             builder.withSimpleCard("Tarjeta", speechText);
