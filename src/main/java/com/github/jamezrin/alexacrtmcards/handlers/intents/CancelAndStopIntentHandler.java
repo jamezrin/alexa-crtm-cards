@@ -19,7 +19,7 @@ public class CancelAndStopIntentHandler implements RequestHandler {
         String speechText = "Hasta luego";
         return input.getResponseBuilder()
                 .withSpeech(speechText)
-                .withSimpleCard("Salida", speechText)
+                .withSimpleCard("Adios", speechText)
                 .build();
     }
 }

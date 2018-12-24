@@ -7,6 +7,7 @@ import com.amazon.ask.model.RequestEnvelope;
 import com.amazon.ask.util.ValidationUtils;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.amazonaws.services.dynamodbv2.document.ItemUtils;
 import com.amazonaws.services.dynamodbv2.model.*;
 import com.amazonaws.services.dynamodbv2.util.TableUtils;
@@ -21,8 +22,8 @@ import java.util.function.Function;
  * Persistence adapter for storing skill persistence attributes in Amazon DynamoDB.
  */
 public final class DynamoDbMapperPersistenceAdapter implements PersistenceAdapter {
-
     private final AmazonDynamoDB dynamoDb;
+    private final DynamoDBMapper mapper;
     private final String tableName;
     private final String partitionKeyName;
     private final String attributesKeyName;
@@ -34,9 +35,11 @@ public final class DynamoDbMapperPersistenceAdapter implements PersistenceAdapte
     private static final boolean DEFAULT_AUTO_CREATE_TABLE = false;
     private static final Function<RequestEnvelope, String> DEFAULT_PARTITION_KEY_GENERATOR = PartitionKeyGenerators.userId();
 
+    // https://docs.aws.amazon.com/es_es/amazondynamodb/latest/developerguide/DynamoDBMapper.Methods.html
     private DynamoDbMapperPersistenceAdapter(Builder builder) {
         this.tableName = ValidationUtils.assertStringNotEmpty(builder.tableName, "table name");
         this.dynamoDb = builder.dynamoDb != null ? builder.dynamoDb : AmazonDynamoDBClientBuilder.standard().build();
+        this.mapper = new DynamoDBMapper(dynamoDb);
         this.partitionKeyName = builder.partitionKeyName;
         this.attributesKeyName = builder.attributesKeyName;
         this.partitionKeyGenerator = builder.partitionKeyGenerator;

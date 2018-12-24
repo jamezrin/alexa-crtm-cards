@@ -7,16 +7,16 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import java.util.Map;
 
-public class AttributeWrapper {
+public class AttributeHandler {
     private final ObjectMapper objectMapper;
     private final String wrapperRootKey;
 
-    public AttributeWrapper(String wrapperRootKey, ObjectMapper objectMapper) {
+    public AttributeHandler(String wrapperRootKey, ObjectMapper objectMapper) {
         this.wrapperRootKey = wrapperRootKey;
         this.objectMapper = objectMapper;
     }
 
-    public AttributeWrapper(String wrapperRootKey) {
+    public AttributeHandler(String wrapperRootKey) {
         this(wrapperRootKey, new ObjectMapper()
                 .registerModule(new JavaTimeModule()));
     }

@@ -9,6 +9,7 @@ import com.amazon.ask.response.ResponseBuilder;
 import java.util.Optional;
 
 import static com.amazon.ask.request.Predicates.requestType;
+import static com.github.jamezrin.alexacrtmcards.util.SkillPredicates.hasProvidedCard;
 
 public class LaunchRequestHandler implements RequestHandler {
 
@@ -21,8 +22,21 @@ public class LaunchRequestHandler implements RequestHandler {
     public Optional<Response> handle(HandlerInput input) {
         ResponseBuilder builder = input.getResponseBuilder();
 
+        if (hasProvidedCard().test(input)) {
+            String speechText =
+                    "Bienvenido de nuevo. ¿Que quieres hacer? Recuerda que " +
+                    "me puedes pedir ayuda diciendo 'ayuda'";
+            builder.withSpeech(speechText);
+            builder.withReprompt(speechText);
+        } else {
+            String speechText =
+                    "Bienvenido a esta habilidad. Para usar esta habilidad tienes que darme " +
+                    "unos dígitos de tu tarjeta de transporte. Para ello dí 'configurar'";
+            builder.withSpeech(speechText);
+            builder.withReprompt(speechText);
+        }
 
-
+        builder.withShouldEndSession(false);
         return builder.build();
     }
 

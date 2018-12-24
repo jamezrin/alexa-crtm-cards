@@ -7,6 +7,7 @@
 - [ ] Validate card input and then ask for the slot again (elicit) 
 - [ ] Try card against server after validating it and if it's not valid, ask again
 - [ ] Save last card state to the database
+- [ ] Add i18n support (english and spanish)
 - [x] Create intent to say remaining days to expiration date
 - [ ] Create overview intent which says everything just by opening it
 - [ ] Support english language
