@@ -5,14 +5,33 @@ import com.amazon.ask.dispatcher.request.handler.HandlerInput;
 import com.amazon.ask.dispatcher.request.handler.RequestHandler;
 import com.amazon.ask.model.*;
 import com.amazon.ask.response.ResponseBuilder;
+import com.github.jamezrin.crtmcards.EndpointClient;
+import com.github.jamezrin.crtmcards.ResponseParser;
+import com.github.jamezrin.crtmcards.types.CrtmCard;
+import org.apache.http.HttpResponse;
+import org.jsoup.helper.Validate;
+import org.slf4j.Logger;
 
 import java.util.Map;
 import java.util.Optional;
+import java.util.regex.Pattern;
 
 import static com.amazon.ask.request.Predicates.intentName;
 import static com.github.jamezrin.alexacrtmcards.util.SkillPredicates.cardSetupNeeded;
+import static org.slf4j.LoggerFactory.getLogger;
 
 public class ProvideCardDetailsIntentHandler implements RequestHandler {
+    private static final Pattern PREFIX_PATTERN = Pattern.compile("^[0-9]{3}$");
+    private static final Pattern NUMBER_PATTERN = Pattern.compile("^[0-9]{10}$");
+
+    private final EndpointClient endpointClient;
+
+    private static Logger LOG = getLogger(RemainingDaysIntentHandler.class);
+
+    public ProvideCardDetailsIntentHandler(EndpointClient endpointClient) {
+        this.endpointClient = endpointClient;
+    }
+
     @Override
     public boolean canHandle(HandlerInput input) {
         return input.matches(intentName("ProvideCardDetailsIntent")
@@ -30,33 +49,67 @@ public class ProvideCardDetailsIntentHandler implements RequestHandler {
         Slot prefixSlot = slots.get("prefix");
         String prefixSlotValue = prefixSlot.getValue();
         if (prefixSlotValue != null) {
-            // TODO Validate and if unsuccessful, return elicit directive
+            if (!PREFIX_PATTERN
+                    .matcher(prefixSlotValue)
+                    .matches()) {
+                builder.withSpeech(
+                        "Dame los tres últimos dígitos de la primera linea situados en " +
+                        "la parte frontal de tu tarjeta, al lado de tu foto");
+                builder.addElicitSlotDirective("prefix", intent);
+                return builder.build();
+            }
         }
 
         Slot numberSlot = slots.get("number");
         String numberSlotValue = numberSlot.getValue();
         if (numberSlotValue != null) {
-            // TODO Validate and if unsuccessful, return elicit directive
+            if (!NUMBER_PATTERN
+                    .matcher(numberSlotValue)
+                    .matches()) {
+                builder.withSpeech(
+                        "Dame los diez dígitos de la segunda linea situados en la parte " +
+                        "frontal de tu tarjeta, al lado de tu foto");
+                builder.addElicitSlotDirective("number", intent);
+                return builder.build();
+            }
         }
 
         // For some reason the dialog state never gets to be `COMPLETED`
         if (prefixSlotValue != null && numberSlotValue != null) {
-            AttributesManager attributesManager = input.getAttributesManager();
-            Map<String, Object> attributes = attributesManager.getPersistentAttributes();
+            try {
+                HttpResponse response = endpointClient.connect(
+                        prefixSlotValue, numberSlotValue);
+                ResponseParser responseParser = new ResponseParser(response);
+                CrtmCard card = responseParser.parse();
+                Validate.notNull(card);
 
-            attributes.put("ttp_prefix", prefixSlotValue);
-            attributes.put("ttp_number", numberSlotValue);
+                AttributesManager attributesManager = input.getAttributesManager();
+                Map<String, Object> attributes = attributesManager.getPersistentAttributes();
 
-            attributesManager.setPersistentAttributes(attributes);
-            attributesManager.savePersistentAttributes();
+                attributes.put("ttp_prefix", prefixSlotValue);
+                attributes.put("ttp_number", numberSlotValue);
 
-            String speechText = "<p>¡Ya está todo! Ya no tendrás que hacer este paso nunca mas. </p>" +
-                    "<p>Dime algo como Cuando caduca mi tarjeta de transporte</p>";
-            builder.withSpeech(speechText);
-            builder.withReprompt(speechText);
-            builder.withSimpleCard("¡Ya está!", speechText);
+                attributesManager.setPersistentAttributes(attributes);
+                attributesManager.savePersistentAttributes();
 
-            builder.withShouldEndSession(false);
+                String speechText = "<p>¡Ya está todo! Ya no tendrás que hacer este paso nunca mas. </p>" +
+                        "<p>Pregúntame algo como 'Cuando caduca mi tarjeta de transporte'</p>";
+                builder.withSpeech(speechText);
+                builder.withReprompt(speechText);
+                builder.withSimpleCard("¡Ya está!", speechText);
+
+                builder.withShouldEndSession(false);
+            } catch (Exception e) {
+                String speechText = "<p>Ha ocurrido un error al contactar con el consorcio de transportes.</p>" +
+                        "<p>Vuelve a intentarlo mas tarde</p>";
+                builder.withSpeech(speechText);
+                builder.withReprompt(speechText);
+                builder.withSimpleCard("Error remoto", speechText);
+
+                builder.withShouldEndSession(true);
+            }
+
+
         } else {
             builder.addDelegateDirective(intentRequest.getIntent());
         }

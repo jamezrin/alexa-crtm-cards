@@ -3,7 +3,6 @@ package com.github.jamezrin.alexacrtmcards;
 import com.amazon.ask.Skill;
 import com.amazon.ask.SkillStreamHandler;
 import com.amazon.ask.Skills;
-import com.github.jamezrin.alexacrtmcards.data.AttributeHandler;
 import com.github.jamezrin.alexacrtmcards.handlers.exceptions.*;
 import com.github.jamezrin.alexacrtmcards.handlers.intents.CancelAndStopIntentHandler;
 import com.github.jamezrin.alexacrtmcards.handlers.intents.HelpIntentHandler;
@@ -18,17 +17,17 @@ import com.github.jamezrin.crtmcards.EndpointClient;
 
 public class MainSkillStreamHandler extends SkillStreamHandler {
     private static Skill getSkill() {
-        String attrKey = System.getenv("ATTR_KEY");
+        //String attrKey = System.getenv("ATTR_KEY");
         String skillId = System.getenv("SKILL_ID");
         String tableName = System.getenv("TABLE_NAME");
 
         EndpointClient endpointClient = new EndpointClient();
-        AttributeHandler attributeHandler = new AttributeHandler(attrKey);
+        //AttributeHandler attributeHandler = new AttributeHandler(attrKey);
 
         return Skills.standard()
                 .addRequestHandlers(
                         new CancelAndStopIntentHandler(),
-                        new ProvideCardDetailsIntentHandler(),
+                        new ProvideCardDetailsIntentHandler(endpointClient),
                         //new OverviewSkillIntentHandler(endpointClient),
                         new RemainingDaysIntentHandler(endpointClient),
                         new ExpirationDateIntentHandler(endpointClient),
