@@ -79,6 +79,11 @@ public class ExpirationDateIntentHandler implements RequestHandler {
                         builder.withReprompt(speechText);
                         builder.withSimpleCard("Caducada", speechText);
                     }
+                } else {
+                    String speechText = "Tu tarjeta no se ha recargado nunca";
+                    builder.withSpeech(speechText);
+                    builder.withReprompt(speechText);
+                    builder.withSimpleCard("Caducada", speechText);
                 }
             } catch (ArrayIndexOutOfBoundsException e) {
                 LOG.error(e.getMessage(), e);
