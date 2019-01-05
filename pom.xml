@@ -23,7 +23,7 @@
         <dependency>
             <groupId>com.github.jamezrin</groupId>
             <artifactId>crtm-cards-java</artifactId>
-            <version>v1.1.3</version>
+            <version>v1.2</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>

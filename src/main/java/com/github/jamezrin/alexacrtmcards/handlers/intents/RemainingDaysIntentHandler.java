@@ -54,10 +54,9 @@ public class RemainingDaysIntentHandler implements RequestHandler {
             CrtmCard card = responseParser.parse();
 
             try {
-                int renewalsLen = card.getRenewals().length;
-                CardRenewal lastRenewal = card.getRenewals() [renewalsLen - 1];
-
-                if (lastRenewal != null) {
+                if (!card.getRenewals().isEmpty()) {
+                    CardRenewal lastRenewal = card.getRenewals().get(
+                            card.getRenewals().size() - 1);
                     LocalDate expDate = lastRenewal.getExpirationDate();
                     if (expDate != null) {
                         if (expDate.isAfter(LocalDate.now())) {

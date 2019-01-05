@@ -31,14 +31,14 @@ public class TestJackson {
         objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
 
-        CardRenewal card1 = new CardRenewal(
+        CardRenewal renewal1 = new CardRenewal(
                 LocalDate.of(2018, 9, 5),
                 LocalDate.of(2018, 9, 10),
                 LocalDate.of(2018, 10, 15),
                 LocalDate.of(2018, 10, 20)
         );
 
-        CardRenewal card2 = new CardRenewal(
+        CardRenewal renewal2 = new CardRenewal(
                 LocalDate.of(2018, 8, 10),
                 LocalDate.of(2018, 8, 15),
                 LocalDate.of(2018, 9, 20),
@@ -52,7 +52,7 @@ public class TestJackson {
                 "0123456789",
                 "Titulo",
                 CardType.NORMAL,
-                new CardRenewal[] { card1, card2 },
+                Arrays.asList(renewal1, renewal2),
                 LocalDate.of(2018, 10, 20),
                 sampleProfiles
         );
