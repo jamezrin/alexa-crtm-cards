@@ -35,7 +35,7 @@ public class HelpIntentHandler implements RequestHandler {
                     "'configurar'. Los puedes encontrar en la parte frontal de tu tarjeta, justo al lado de tu foto " +
                     "en el carnet. El primer numero está formado por los 3 últimos dígitos de la primera linea, el " +
                     "segundo numero está justo debajo y es de 10 dígitos. Una vez hecho eso podrás pedirme ayuda otra " +
-                    "vez y te dire que puedes hacer.";
+                    "vez y te diré que puedes hacer.";
             builder.withSpeech(speechText);
             builder.withSimpleCard("Ayuda", speechText);
         }

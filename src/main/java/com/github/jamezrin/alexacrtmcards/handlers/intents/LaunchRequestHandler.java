@@ -34,6 +34,7 @@ public class LaunchRequestHandler implements RequestHandler {
             String speechText =
                     "Bienvenido a esta habilidad. Para usar esta habilidad tienes que darme " +
                     "unos dígitos de tu tarjeta de transporte. Para ello dí 'configurar'";
+            // todo decir algo de prepara tu tarjeta bla bla bla
             builder.withSpeech(speechText);
             builder.withReprompt(speechText);
             builder.withSimpleCard("Bienvenido", speechText);

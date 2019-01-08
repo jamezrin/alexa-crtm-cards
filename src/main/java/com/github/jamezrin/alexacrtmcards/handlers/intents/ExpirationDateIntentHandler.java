@@ -17,6 +17,7 @@ import org.slf4j.Logger;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Map;
 import java.util.Optional;
 
@@ -60,17 +61,28 @@ public class ExpirationDateIntentHandler implements RequestHandler {
                     LocalDate expDate = lastRenewal.getExpirationDate();
                     if (expDate != null) {
                         if (expDate.isAfter(LocalDate.now())) {
-                            String speechText = String.format("Tu tarjeta caduca el dia %s",
-                                    HumanDateFormatter.formatPrettyDate(expDate));
+                            // todo make similar thing in remaining days intent handler
+                            String speechText = String.format(
+                                    "Tu tarjeta caducará el dia <say-as interpret-as=\"date\">%s</say-as>",
+                                    expDate.format(DateTimeFormatter.ofPattern("yyyyMMdd")));
+
                             builder.withSpeech(speechText);
                             builder.withReprompt(speechText);
-                            builder.withSimpleCard("Tarjeta", speechText);
+
+                            builder.withSimpleCard("En vigor",
+                                    String.format("Tu tarjeta caducará el dia %s",
+                                    HumanDateFormatter.formatPrettyDate(expDate)));
                         } else {
-                            String speechText = String.format("Tu tarjeta caducó el dia %s",
-                                    HumanDateFormatter.formatPrettyDate(expDate));
+                            String speechText = String.format(
+                                    "Tu tarjeta caducó el dia <say-as interpret-as=\"date\">%s</say-as>",
+                                    expDate.format(DateTimeFormatter.ofPattern("yyyyMMdd")));
+
                             builder.withSpeech(speechText);
                             builder.withReprompt(speechText);
-                            builder.withSimpleCard("Caducada", speechText);
+
+                            builder.withSimpleCard("Caducada",
+                                    String.format("Tu tarjeta caducó el dia %s",
+                                    HumanDateFormatter.formatPrettyDate(expDate)));
                         }
                     } else {
                         String speechText = "Tu tarjeta ya ha caducado";
